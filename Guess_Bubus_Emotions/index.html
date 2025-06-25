@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess Bubu's Feelings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Guess Bubu's Emotions/Feelings</h1>
+        <div class="note">You are Dudu, and your mission is to immediately detect Bubu's feeling, or else he will bring disaster in Dudu and Bubu's world!!!</div>
+        <img id="intro-image" src="Dbp/impostor.gif" alt="Introduction Image" class="center-image">
+        <div class="level-timer" id="level-timer-container">
+            <div>Level: <span id="level-count">0</span></div>
+            <div>Time Remaining: <span id="timer">02:00</span></div>
+        </div>
+        <img id="random-image" src="" alt="Random Emotion">
+        <input type="text" id="guess-input" placeholder="Enter your guess">
+        <button id="submit-guess">Submit</button>
+        <button id="new-image">Give Up</button>
+        <button id="start-game">Save Dudu and Bubu's World</button>
+        <button id="dont-save">Don't Save Dudu and Bubu's World</button>
+        <div id="message"></div>
+
+        <div id="game-over" style="display:none;">
+            <img src="Dbp/leave.gif" alt="Bubu Leaves Dudu" id="game-over-image">
+            <p>Dudu didn't make Bubu happy on time (Bubu is impatient). Bubu leaves Dudu.</p>
+            <button id="time-travel-back">Go Back</button>
+        </div>
+        
+        <div id="level-10-screen" style="display:none;">
+            <img src="Dbp/win.gif" alt="Congratulations" id="level-10-image">
+            <p>Congratulations! You've reached Level 10. You saved Dudu and Bubu's World!</p>
+            <p>HAPPY BIRTHDAY PANGGAA BUBUUU CUTIEE PATOTIEEE KOOO!!! DUDU WISH FOR GOOD CUTIEE BUSOG LUSOG HEALTHY BUBU THIS YEAR AND SUPER DUPER PASA SI BUBU SA LAHAT NG SUB NYA KASI DESURB NI BUBUU YOONN!!!😤😤😤🤍🤍🤍 MAHAL NA MAHAL KITA PANGGAAA AND MORE LOVE DOVEY DUDU AND BUBU DAYS, MONTHS, AND YEARS TO COMEEE!!! MWEHEHEHE!!!! >:DDD 🎉🎊🎂🎊🎉
+            </p>
+            <button id="play-again">Play Again</button>
+        </div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

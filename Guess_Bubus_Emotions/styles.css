@@ -1,0 +1,256 @@
+body {
+    background-color: #008080;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.game-container {
+    position: relative;
+    background-color: #fff;
+    padding: 20px;
+    border: 4px solid #006666;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+h1 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.note {
+    font-size: 14px;
+    color: #008080;
+    margin-bottom: 20px;
+}
+
+.center-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+}
+
+.level-timer {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+#level-count, #timer {
+    font-weight: bold;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px #0000001a;
+}
+
+#guess-input {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 300px;
+    margin: 10px auto;
+    display: block;
+    box-sizing: border-box;
+    border-radius: 20px;
+    border: 2px solid #ddd;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px auto;
+    width: 100%;
+    max-width: 300px;
+    box-sizing: border-box;
+    display: block;
+    border: none;
+    border-radius: 25px;
+    background-color: #008080;
+    color: #fff;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+    background-color: #006666;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+#new-image {
+    background-color: #353535;
+    color: #fff;
+    font-size: 14px;
+    padding: 5px 10px;
+    max-width: 150px;
+}
+
+#new-image:hover {
+    background-color: #292929;
+}
+
+#new-image.shrunk {
+    padding: 2px 5px;
+    font-size: 12px;
+    max-width: 100px;
+}
+
+#failure-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px #0000001a;
+}
+
+#failure-note {
+    font-size: 18px;
+    color: red;
+    text-align: center;
+    margin: 20px 0;
+}
+
+#back-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px auto;
+    display: block;
+    border: none;
+    border-radius: 25px;
+    background-color: #008080;
+    color: #fff;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#back-button:hover {
+    background-color: #006666;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+#failure-image, #failure-note, #back-button {
+    display: none;
+}
+
+#dont-save {
+    background-color: #353535;
+    position: absolute;
+    color: #fff;
+    font-size: 14px;
+    padding: 5px 10px;
+    max-width: 150px;
+    margin: 10px auto;
+    left: 32.5%;
+    display: block;
+    border-radius: 25px;
+    border: 4px solid #006666;
+    cursor: pointer;
+}
+
+#dont-save:hover {
+    background-color: #292929;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 18px;
+    color: green;
+}
+
+#message.incorrect {
+    color: red;
+}
+
+#random-image, #guess-input, #submit-guess, #new-image, #level-timer-container {
+    display: none;
+}
+
+#game-over-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px #0000001a;
+}
+
+#game-over p {
+    font-size: 16px;
+    color: red;
+    margin-top: 20px;
+    text-align: center;
+}
+
+#time-travel-back {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 20px auto;
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    border: none;
+    border-radius: 25px;
+    background-color: #008080;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+#time-travel-back:hover {
+    background-color: #006666;
+}
+
+
+@media (max-width: 400px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    img {
+        max-width: 250px;
+    }
+
+    #guess-input, button {
+        max-width: 250px;
+    }
+}
+
+@media (min-width: 400px) and (max-width: 768px) {
+    h1 {
+        font-size: 22px;
+    }
+
+    img {
+        max-width: 280px;
+    }
+
+    #guess-input, button {
+        max-width: 280px;
+    }
+}
+
+@media (min-width: 769px) {
+    h1 {
+        font-size: 26px;
+    }
+
+    img {
+        max-width: 350px;
+    }
+
+    #guess-input, button {
+        max-width: 350px;
+    }
+}
