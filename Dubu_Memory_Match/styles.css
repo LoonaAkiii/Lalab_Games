@@ -34,6 +34,15 @@ h1 {
     justify-items: center;
 }
 
+#letterFromDuduContainer img {
+    width: 90vw;
+    max-width: 500px;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+
 .card {
     width: 22vw;
     height: 22vw;
@@ -107,7 +116,6 @@ h1 {
     background-color: #ea9ab2;
 }
 
-/* Update the style of the "No" button */
 #noButton {
     background-color: red;
     color: white;
@@ -119,23 +127,19 @@ h1 {
     transition: transform 0.3s ease;
 }
 
-/* Hover effect for the "No" button */
 #noButton:hover {
     background-color: darkred;
 }
 
-/* Style to make the button shrink */
 .shrink {
-    transform: scale(0.7); /* Shrinks the button to 70% of its original size */
+    transform: scale(0.7);
     transition: transform 0.3s ease;
 }
 
-/* Hide the button when it disappears */
 .hidden-button {
     display: none;
 }
 
-/* Style for the "Double Nyeheyyy" section */
 #doubleNyeheyyySection {
     text-align: center;
     margin-top: 20px;
