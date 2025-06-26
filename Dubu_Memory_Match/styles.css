@@ -1,14 +1,12 @@
 * {
   box-sizing: border-box;
 }
-
 html, body {
   width: 100%;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
 }
-
 body {
   display: flex;
   flex-direction: column;
@@ -19,14 +17,12 @@ body {
   background-color: #ea9ab2;
   position: relative;
 }
-
 h1 {
   font-size: medium;
   margin: 20px 0;
   color: aliceblue;
   text-align: center;
 }
-
 .game-board {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(22vw, 1fr));
@@ -35,7 +31,6 @@ h1 {
   padding: 2vw;
   justify-items: center;
 }
-
 .card {
   width: 22vw;
   height: 22vw;
@@ -48,32 +43,36 @@ h1 {
   cursor: pointer;
   border-radius: 10px;
   position: relative;
+  overflow: hidden;
 }
-
 .card video {
+  display: none;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 10px;
-  display: none;
 }
-
+.card img {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
 .card.flipped video {
   display: block;
 }
-
+.card.flipped img {
+  display: none;
+}
 .card.matched {
   background-color: #32cd32;
   border: 2px solid green;
   cursor: default;
 }
-
-.card.matched video,
 .card.matched img {
-  opacity: 0.8;
-  border-radius: 10px;
+  display: block;
 }
-
 #letterFromDuduContainer img {
   width: 90vw;
   max-width: 500px;
@@ -82,11 +81,9 @@ h1 {
   margin: 20px auto;
   border-radius: 10px;
 }
-
 .hidden {
   display: none;
 }
-
 .dialog {
   position: fixed;
   top: 50%;
@@ -99,11 +96,9 @@ h1 {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
-
 .dialog-content {
   text-align: center;
 }
-
 .dialog button {
   background-color: #FFD1DC;
   color: white;
@@ -113,46 +108,37 @@ h1 {
   cursor: pointer;
   margin-top: 10px;
 }
-
 .dialog button:hover {
   background-color: #ea9ab2;
 }
-
 #noButton {
   background-color: red;
   margin-right: 10px;
 }
-
 #noButton:hover {
   background-color: darkred;
 }
-
 .shrink {
   transform: scale(0.7);
   transition: transform 0.3s ease;
 }
-
 .hidden-button {
   display: none;
 }
-
 #doubleNyeheyyySection {
   text-align: center;
   margin-top: 20px;
 }
-
 .nyeheyyy-content {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 .nyeheyyy-gif {
   max-width: 300px;
   margin-bottom: 20px;
   border-radius: 10px;
 }
-
 #letterButton {
   background-color: #e23e65;
   color: white;
@@ -162,11 +148,9 @@ h1 {
   cursor: pointer;
   margin-top: 10px;
 }
-
 #letterButton:hover {
   background-color: #b12e4c;
 }
-
 #exitButtonFixed {
   position: fixed;
   bottom: 20px;
@@ -182,7 +166,6 @@ h1 {
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
-
 #exitButtonFixed:hover {
   background-color: #d76a8f;
 }
