@@ -58,7 +58,7 @@ h1 {
 }
 
 
-.card img {
+.card video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -67,11 +67,12 @@ h1 {
 }
 
 
-.card.flipped img {
+.card.flipped video {
     display: block;
 }
 
-.card.matched {
+.card.matched video {
+    opacity: 0.8;
     background-color: #32cd32;
     cursor: default;
     border: 2px solid green;

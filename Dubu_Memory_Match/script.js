@@ -1,20 +1,20 @@
 const cardImages = [
-    { src: 'air_bubu.gif', match: 'air_dudu.gif' },
-    { src: 'air_dudu.gif', match: 'air_bubu.gif' },
-    { src: 'angry_bubu.gif', match: 'angry_dudu.gif' },
-    { src: 'angry_dudu.gif', match: 'angry_bubu.gif' },
-    { src: 'baby_bubu.gif', match: 'baby_dudu.gif' },
-    { src: 'baby_dudu.gif', match: 'baby_bubu.gif' },
-    { src: 'duck_bubu.gif', match: 'duck_dudu.gif' },
-    { src: 'duck_dudu.gif', match: 'duck_bubu.gif' },
-    { src: 'eat_bubu.gif', match: 'eat_dudu.gif' },
-    { src: 'eat_dudu.gif', match: 'eat_bubu.gif' },
-    { src: 'happy_bubu.gif', match: 'happy_dudu.gif' },
-    { src: 'happy_dudu.gif', match: 'happy_bubu.gif' },
-    { src: 'icecream_bubu.gif', match: 'icecream_dudu.gif' },
-    { src: 'icecream_dudu.gif', match: 'icecream_bubu.gif' },
-    { src: 'work_bubu.gif', match: 'work_dudu.gif' },
-    { src: 'work_dudu.gif', match: 'work_bubu.gif' },
+  { src: 'air_bubu.webm', match: 'air_dudu.webm' },
+  { src: 'air_dudu.webm', match: 'air_bubu.webm' },
+  { src: 'angry_bubu.webm', match: 'angry_dudu.webm' },
+  { src: 'angry_dudu.webm', match: 'angry_bubu.webm' },
+  { src: 'baby_bubu.webm', match: 'baby_dudu.webm' },
+  { src: 'baby_dudu.webm', match: 'baby_bubu.webm' },
+  { src: 'duck_bubu.webm', match: 'duck_dudu.webm' },
+  { src: 'duck_dudu.webm', match: 'duck_bubu.webm' },
+  { src: 'eat_bubu.webm', match: 'eat_dudu.webm' },
+  { src: 'eat_dudu.webm', match: 'eat_bubu.webm' },
+  { src: 'happy_bubu.webm', match: 'happy_dudu.webm' },
+  { src: 'happy_dudu.webm', match: 'happy_bubu.webm' },
+  { src: 'icecream_bubu.webm', match: 'icecream_dudu.webm' },
+  { src: 'icecream_dudu.webm', match: 'icecream_bubu.webm' },
+  { src: 'work_bubu.webm', match: 'work_dudu.webm' },
+  { src: 'work_dudu.webm', match: 'work_bubu.webm' },
 ];
 
 let firstCard = null;
@@ -23,132 +23,129 @@ let matches = 0;
 let lockBoard = false;
 
 function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
 
 function createCard(pair) {
-    const card = document.createElement('div');
-    card.classList.add('card');
-    const img = document.createElement('img');
-    img.src = pair.src;
-    card.dataset.match = pair.match;
-    card.appendChild(img);
-    card.addEventListener('click', flipCard);
-    return card;
+  const card = document.createElement('div');
+  card.classList.add('card');
+
+  const video = document.createElement('video');
+  video.src = pair.src;
+  video.loop = true;
+  video.autoplay = true;
+  video.muted = true;
+  video.playsInline = true;
+  video.classList.add('card-video');
+
+  card.dataset.match = pair.match;
+  card.appendChild(video);
+  card.addEventListener('click', flipCard);
+  return card;
 }
 
 function flipCard() {
-    if (lockBoard) return;
-    if (this === firstCard) return;
+  if (lockBoard) return;
+  if (this === firstCard) return;
 
-    this.classList.add('flipped');
+  this.classList.add('flipped');
 
-    if (!firstCard) {
-        firstCard = this;
-    } else {
-        secondCard = this;
-        lockBoard = true;
-        checkForMatch();
-    }
+  if (!firstCard) {
+    firstCard = this;
+  } else {
+    secondCard = this;
+    lockBoard = true;
+    checkForMatch();
+  }
 }
 
 function checkForMatch() {
-    const firstCardMatch = firstCard.dataset.match;
-    const secondCardSrc = secondCard.querySelector('img').src.split('/').pop();
+  const firstCardMatch = firstCard.dataset.match;
+  const secondCardSrc = secondCard.querySelector('video').src.split('/').pop();
 
-    if (firstCardMatch === secondCardSrc) {
-        markAsMatched();
-        disableCards();
-    } else {
-        unflipCards();
-    }
+  if (firstCardMatch === secondCardSrc) {
+    markAsMatched();
+    disableCards();
+  } else {
+    unflipCards();
+  }
 }
 
 function markAsMatched() {
-    firstCard.classList.add('matched');
-    secondCard.classList.add('matched');
+  firstCard.classList.add('matched');
+  secondCard.classList.add('matched');
 }
 
 function disableCards() {
-    firstCard.removeEventListener('click', flipCard);
-    secondCard.removeEventListener('click', flipCard);
+  firstCard.removeEventListener('click', flipCard);
+  secondCard.removeEventListener('click', flipCard);
 
-    resetBoard();
-    matches += 1;
-    if (matches === cardImages.length / 2) {
-        setTimeout(() => showWinDialog(), 500);
-    }
+  resetBoard();
+  matches += 1;
+  if (matches === cardImages.length / 2) {
+    setTimeout(() => showWinDialog(), 500);
+  }
 }
 
 function unflipCards() {
-    setTimeout(() => {
-        firstCard.classList.remove('flipped');
-        secondCard.classList.remove('flipped');
-        resetBoard();
-    }, 1000);
+  setTimeout(() => {
+    firstCard.classList.remove('flipped');
+    secondCard.classList.remove('flipped');
+    resetBoard();
+  }, 1000);
 }
 
 function resetBoard() {
-    [firstCard, secondCard] = [null, null];
-    lockBoard = false;
+  [firstCard, secondCard] = [null, null];
+  lockBoard = false;
 }
 
 function showWinDialog() {
-    const winDialog = document.getElementById('winDialog');
-    const yesButton = document.getElementById('yesButton');
+  const winDialog = document.getElementById('winDialog');
+  const yesButton = document.getElementById('yesButton');
 
-    winDialog.classList.remove('hidden');
+  winDialog.classList.remove('hidden');
 
-    yesButton.addEventListener('click', () => {
-        winDialog.classList.add('hidden');
-        document.getElementById('gameBoard').classList.add('hidden'); // Hide the game board
-        document.querySelector('h1').classList.add('hidden'); // Hide the h1 heading
-        showDoubleNyeheyyy(); // Show the "DOUBLE NYEHEYYY!!" section when "YES!" is clicked
-    });
+  yesButton.addEventListener('click', () => {
+    winDialog.classList.add('hidden');
+    document.getElementById('gameBoard').classList.add('hidden');
+    document.querySelector('h1').classList.add('hidden');
+    showDoubleNyeheyyy();
+  });
 }
 
 function showDoubleNyeheyyy() {
-    const doubleNyeheyyySection = document.getElementById('doubleNyeheyyySection');
-    doubleNyeheyyySection.classList.remove('hidden');
+  const section = document.getElementById('doubleNyeheyyySection');
+  section.classList.remove('hidden');
 
-    // Add behavior for the "LETTER FROM DUDU" button
-    document.getElementById('letterButton').addEventListener('click', () => {
-        const letterFromDuduContainer = document.getElementById('letterFromDuduContainer');
-        letterFromDuduContainer.classList.remove('hidden'); // Show the image when button is clicked
-
-        // Hide the "DOUBLE NYEHEYYY!!" section after clicking "LETTER FROM DUDU" button
-        doubleNyeheyyySection.classList.add('hidden');
-    });
+  document.getElementById('letterButton').addEventListener('click', () => {
+    const container = document.getElementById('letterFromDuduContainer');
+    container.classList.remove('hidden');
+    section.classList.add('hidden');
+  });
 }
-
-function resetGame() {
-    location.reload(); // Simple approach: reload the page
-}
-
-function initGame() {
-    shuffle(cardImages);
-    const gameBoard = document.getElementById('gameBoard');
-    cardImages.forEach(pair => {
-        const card = createCard(pair);
-        gameBoard.appendChild(card);
-    });
-}
-
-initGame();
 
 function handleNoButtonClick() {
-    const noButton = document.getElementById('noButton');
-
-    if (!noButton.classList.contains('shrink')) {
-        // First click: Shrink the button
-        noButton.classList.add('shrink');
-    } else {
-        // Second click: Make the button disappear
-        noButton.classList.add('hidden-button');
-    }
+  const noButton = document.getElementById('noButton');
+  if (!noButton.classList.contains('shrink')) {
+    noButton.classList.add('shrink');
+  } else {
+    noButton.classList.add('hidden-button');
+  }
 }
 
 document.getElementById('noButton').addEventListener('click', handleNoButtonClick);
+
+function initGame() {
+  shuffle(cardImages);
+  const board = document.getElementById('gameBoard');
+  cardImages.forEach(pair => {
+    const card = createCard(pair);
+    board.appendChild(card);
+  });
+}
+
+initGame();
