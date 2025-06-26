@@ -33,13 +33,12 @@ function createCard(pair) {
   const card = document.createElement('div');
   card.classList.add('card');
   const video = document.createElement('video');
-  video.setAttribute('src', pair.src);
+  video.src = pair.src;
   video.setAttribute('preload', 'none');
   video.loop = true;
   video.autoplay = false;
   video.muted = true;
   video.playsInline = true;
-  video.classList.add('card-video');
   card.dataset.match = pair.match;
   card.dataset.src = pair.src;
   card.appendChild(video);
@@ -51,7 +50,11 @@ function flipCard() {
   if (lockBoard || this === firstCard) return;
   this.classList.add('flipped');
   const video = this.querySelector('video');
-  video.play().catch(() => {});
+  if (video) {
+    video.currentTime = 0;
+    video.play().catch(() => {});
+  }
+
   if (!firstCard) {
     firstCard = this;
   } else {
@@ -62,9 +65,8 @@ function flipCard() {
 }
 
 function checkForMatch() {
-  const firstMatch = firstCard.dataset.match;
-  const secondSrc = secondCard.dataset.src;
-  if (firstMatch === secondSrc) {
+  const isMatch = firstCard.dataset.match === secondCard.dataset.src;
+  if (isMatch) {
     markAsMatched();
     disableCards();
   } else {
@@ -73,26 +75,26 @@ function checkForMatch() {
 }
 
 function markAsMatched() {
-  firstCard.classList.add('matched');
-  secondCard.classList.add('matched');
-
-  replaceVideoWithSnapshot(firstCard);
-  replaceVideoWithSnapshot(secondCard);
+  [firstCard, secondCard].forEach(card => {
+    card.classList.add('matched');
+    replaceVideoWithSnapshot(card);
+  });
 }
 
 function replaceVideoWithSnapshot(card) {
   const video = card.querySelector('video');
   if (video) {
-    const videoSrc = video.getAttribute('src');
-    const img = document.createElement('img');
-    img.src = videoSrc.replace('.webm', '.png');
-    img.alt = 'Matched Snapshot';
-    img.style.width = '100%';
-    img.style.height = '100%';
-    img.style.objectFit = 'cover';
+    const snapshot = document.createElement('img');
+    snapshot.src = video.src.replace('.webm', '.png');
+    snapshot.alt = 'Matched Snapshot';
+    snapshot.style.width = '100%';
+    snapshot.style.height = '100%';
+    snapshot.style.objectFit = 'cover';
     video.pause();
-    video.remove();
-    card.appendChild(img);
+    video.removeAttribute('src');
+    video.load(); // force unload
+    card.removeChild(video);
+    card.appendChild(snapshot);
   }
 }
 
@@ -100,18 +102,22 @@ function disableCards() {
   firstCard.removeEventListener('click', flipCard);
   secondCard.removeEventListener('click', flipCard);
   resetBoard();
-  matches += 1;
+  matches++;
   if (matches === cardImages.length / 2) {
-    setTimeout(() => showWinDialog(), 500);
+    setTimeout(showWinDialog, 500);
   }
 }
 
 function unflipCards() {
   setTimeout(() => {
-    firstCard.classList.remove('flipped');
-    secondCard.classList.remove('flipped');
-    firstCard.querySelector('video').pause();
-    secondCard.querySelector('video').pause();
+    [firstCard, secondCard].forEach(card => {
+      card.classList.remove('flipped');
+      const video = card.querySelector('video');
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
     resetBoard();
   }, 1000);
 }
@@ -140,11 +146,11 @@ function showDoubleNyeheyyy() {
 }
 
 function handleNoButtonClick() {
-  const noButton = document.getElementById('noButton');
-  if (!noButton.classList.contains('shrink')) {
-    noButton.classList.add('shrink');
+  const btn = document.getElementById('noButton');
+  if (!btn.classList.contains('shrink')) {
+    btn.classList.add('shrink');
   } else {
-    noButton.classList.add('hidden-button');
+    btn.classList.add('hidden-button');
   }
 }
 

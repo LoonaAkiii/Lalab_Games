@@ -5,23 +5,26 @@
 html, body {
   width: 100%;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
+  justify-content: flex-start;
+  min-height: 100vh;
   font-family: Arial, sans-serif;
   background-color: #ea9ab2;
+  position: relative;
 }
 
 h1 {
   font-size: medium;
-  margin-bottom: 20px;
+  margin: 20px 0;
   color: aliceblue;
+  text-align: center;
 }
 
 .game-board {
@@ -117,13 +120,7 @@ h1 {
 
 #noButton {
   background-color: red;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: transform 0.3s ease;
+  margin-right: 10px;
 }
 
 #noButton:hover {
@@ -172,16 +169,16 @@ h1 {
 
 #exitButtonFixed {
   position: fixed;
-  bottom: 15px;
-  right: 15px;
+  bottom: 20px;
+  right: 20px;
   background-color: #f78da7;
   color: white;
   border: none;
-  padding: 12px 16px;
-  border-radius: 10px;
+  padding: 12px 18px;
+  border-radius: 9999px;
   font-size: 14px;
   font-weight: bold;
-  z-index: 2000;
+  z-index: 3000;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
