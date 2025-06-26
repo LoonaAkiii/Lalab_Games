@@ -16,16 +16,19 @@ const cardImages = [
   { src: 'work_bubu.webm', match: 'work_dudu.webm' },
   { src: 'work_dudu.webm', match: 'work_bubu.webm' },
 ];
+
 let firstCard = null;
 let secondCard = null;
 let matches = 0;
 let lockBoard = false;
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
+
 function createCard(pair) {
   const card = document.createElement('div');
   card.classList.add('card');
@@ -38,13 +41,14 @@ function createCard(pair) {
   video.playsInline = true;
   video.classList.add('card-video');
   card.dataset.match = pair.match;
+  card.dataset.src = pair.src;
   card.appendChild(video);
   card.addEventListener('click', flipCard);
   return card;
 }
+
 function flipCard() {
-  if (lockBoard) return;
-  if (this === firstCard) return;
+  if (lockBoard || this === firstCard) return;
   this.classList.add('flipped');
   const video = this.querySelector('video');
   video.play().catch(() => {});
@@ -56,20 +60,42 @@ function flipCard() {
     checkForMatch();
   }
 }
+
 function checkForMatch() {
-  const firstCardMatch = firstCard.dataset.match;
-  const secondCardSrc = secondCard.querySelector('video').src.split('/').pop();
-  if (firstCardMatch === secondCardSrc) {
+  const firstMatch = firstCard.dataset.match;
+  const secondSrc = secondCard.dataset.src;
+  if (firstMatch === secondSrc) {
     markAsMatched();
     disableCards();
   } else {
     unflipCards();
   }
 }
+
 function markAsMatched() {
   firstCard.classList.add('matched');
   secondCard.classList.add('matched');
+
+  replaceVideoWithSnapshot(firstCard);
+  replaceVideoWithSnapshot(secondCard);
 }
+
+function replaceVideoWithSnapshot(card) {
+  const video = card.querySelector('video');
+  if (video) {
+    const videoSrc = video.getAttribute('src');
+    const img = document.createElement('img');
+    img.src = videoSrc.replace('.webm', '.png');
+    img.alt = 'Matched Snapshot';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    video.pause();
+    video.remove();
+    card.appendChild(img);
+  }
+}
+
 function disableCards() {
   firstCard.removeEventListener('click', flipCard);
   secondCard.removeEventListener('click', flipCard);
@@ -79,41 +105,40 @@ function disableCards() {
     setTimeout(() => showWinDialog(), 500);
   }
 }
+
 function unflipCards() {
   setTimeout(() => {
     firstCard.classList.remove('flipped');
     secondCard.classList.remove('flipped');
-    const firstVideo = firstCard.querySelector('video');
-    const secondVideo = secondCard.querySelector('video');
-    if (firstVideo) firstVideo.pause();
-    if (secondVideo) secondVideo.pause();
+    firstCard.querySelector('video').pause();
+    secondCard.querySelector('video').pause();
     resetBoard();
   }, 1000);
 }
+
 function resetBoard() {
   [firstCard, secondCard] = [null, null];
   lockBoard = false;
 }
+
 function showWinDialog() {
-  const winDialog = document.getElementById('winDialog');
-  const yesButton = document.getElementById('yesButton');
-  winDialog.classList.remove('hidden');
-  yesButton.addEventListener('click', () => {
-    winDialog.classList.add('hidden');
+  document.getElementById('winDialog').classList.remove('hidden');
+  document.getElementById('yesButton').addEventListener('click', () => {
+    document.getElementById('winDialog').classList.add('hidden');
     document.getElementById('gameBoard').classList.add('hidden');
     document.querySelector('h1').classList.add('hidden');
     showDoubleNyeheyyy();
   });
 }
+
 function showDoubleNyeheyyy() {
-  const section = document.getElementById('doubleNyeheyyySection');
-  section.classList.remove('hidden');
+  document.getElementById('doubleNyeheyyySection').classList.remove('hidden');
   document.getElementById('letterButton').addEventListener('click', () => {
-    const container = document.getElementById('letterFromDuduContainer');
-    container.classList.remove('hidden');
-    section.classList.add('hidden');
+    document.getElementById('letterFromDuduContainer').classList.remove('hidden');
+    document.getElementById('doubleNyeheyyySection').classList.add('hidden');
   });
 }
+
 function handleNoButtonClick() {
   const noButton = document.getElementById('noButton');
   if (!noButton.classList.contains('shrink')) {
@@ -122,7 +147,13 @@ function handleNoButtonClick() {
     noButton.classList.add('hidden-button');
   }
 }
+
 document.getElementById('noButton').addEventListener('click', handleNoButtonClick);
+
+document.getElementById('exitButtonFixed').addEventListener('click', () => {
+  window.location.href = "../index.html";
+});
+
 function initGame() {
   shuffle(cardImages);
   const board = document.getElementById('gameBoard');
@@ -131,4 +162,5 @@ function initGame() {
     board.appendChild(card);
   });
 }
+
 initGame();
