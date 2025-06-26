@@ -16,43 +16,38 @@ const cardImages = [
   { src: 'work_bubu.webm', match: 'work_dudu.webm' },
   { src: 'work_dudu.webm', match: 'work_bubu.webm' },
 ];
-
 let firstCard = null;
 let secondCard = null;
 let matches = 0;
 let lockBoard = false;
-
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
 function createCard(pair) {
   const card = document.createElement('div');
   card.classList.add('card');
-
   const video = document.createElement('video');
-  video.src = pair.src;
+  video.setAttribute('src', pair.src);
+  video.setAttribute('preload', 'none');
   video.loop = true;
-  video.autoplay = true;
+  video.autoplay = false;
   video.muted = true;
   video.playsInline = true;
   video.classList.add('card-video');
-
   card.dataset.match = pair.match;
   card.appendChild(video);
   card.addEventListener('click', flipCard);
   return card;
 }
-
 function flipCard() {
   if (lockBoard) return;
   if (this === firstCard) return;
-
   this.classList.add('flipped');
-
+  const video = this.querySelector('video');
+  video.play().catch(() => {});
   if (!firstCard) {
     firstCard = this;
   } else {
@@ -61,11 +56,9 @@ function flipCard() {
     checkForMatch();
   }
 }
-
 function checkForMatch() {
   const firstCardMatch = firstCard.dataset.match;
   const secondCardSrc = secondCard.querySelector('video').src.split('/').pop();
-
   if (firstCardMatch === secondCardSrc) {
     markAsMatched();
     disableCards();
@@ -73,42 +66,38 @@ function checkForMatch() {
     unflipCards();
   }
 }
-
 function markAsMatched() {
   firstCard.classList.add('matched');
   secondCard.classList.add('matched');
 }
-
 function disableCards() {
   firstCard.removeEventListener('click', flipCard);
   secondCard.removeEventListener('click', flipCard);
-
   resetBoard();
   matches += 1;
   if (matches === cardImages.length / 2) {
     setTimeout(() => showWinDialog(), 500);
   }
 }
-
 function unflipCards() {
   setTimeout(() => {
     firstCard.classList.remove('flipped');
     secondCard.classList.remove('flipped');
+    const firstVideo = firstCard.querySelector('video');
+    const secondVideo = secondCard.querySelector('video');
+    if (firstVideo) firstVideo.pause();
+    if (secondVideo) secondVideo.pause();
     resetBoard();
   }, 1000);
 }
-
 function resetBoard() {
   [firstCard, secondCard] = [null, null];
   lockBoard = false;
 }
-
 function showWinDialog() {
   const winDialog = document.getElementById('winDialog');
   const yesButton = document.getElementById('yesButton');
-
   winDialog.classList.remove('hidden');
-
   yesButton.addEventListener('click', () => {
     winDialog.classList.add('hidden');
     document.getElementById('gameBoard').classList.add('hidden');
@@ -116,18 +105,15 @@ function showWinDialog() {
     showDoubleNyeheyyy();
   });
 }
-
 function showDoubleNyeheyyy() {
   const section = document.getElementById('doubleNyeheyyySection');
   section.classList.remove('hidden');
-
   document.getElementById('letterButton').addEventListener('click', () => {
     const container = document.getElementById('letterFromDuduContainer');
     container.classList.remove('hidden');
     section.classList.add('hidden');
   });
 }
-
 function handleNoButtonClick() {
   const noButton = document.getElementById('noButton');
   if (!noButton.classList.contains('shrink')) {
@@ -136,9 +122,7 @@ function handleNoButtonClick() {
     noButton.classList.add('hidden-button');
   }
 }
-
 document.getElementById('noButton').addEventListener('click', handleNoButtonClick);
-
 function initGame() {
   shuffle(cardImages);
   const board = document.getElementById('gameBoard');
@@ -147,5 +131,4 @@ function initGame() {
     board.appendChild(card);
   });
 }
-
 initGame();
