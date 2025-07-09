@@ -2,100 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Valentine's Date</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .page {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .page.active {
-      display: flex;
-    }
-    #header {
-      text-align: center;
-      color: #e91e63;
-      font-weight: bold;
-      font-size: 40px;
-      margin-bottom: 20px;
-    }
-    .button-container {
-      display: flex;
-      gap: 20px;
-    }
-    .button {
-      padding: 20px 40px;
-      font-size: 25px;
-      text-align: center;
-      text-decoration: none;
-      color: #fff;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
-    .button:hover {
-      background-color: #333;
-    }
-    #yes-button, .yes-big {
-      background-color: #4caf50;
-    }
-    #no-button, .no-button {
-      background-color: #e91e63;
-    }
-    #fancy-message {
-      font-size: 24px;
-      color: #0400ff;
-      font-weight: bold;
-      text-align: center;
-      margin-top: 20px;
-    }
-    .img-message {
-      font-size: 24px;
-      font-weight: bold;
-      color: #ff002b;
-      text-align: center;
-      margin-top: 20px;
-    }
-    .yes-big {
-      font-size: 50px;
-      padding: 50px 100px;
-    }
-    .no-tiny {
-      font-size: 5px;
-      padding: 1px 1px;
-      background-color: #e91e63;
-    }
-    .no-small {
-      padding: 7.5px 15px;
-      background-color: #e91e63;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body oncontextmenu="return false">
+
+  <button id="exit-button" onclick="exitGame()">EXIT GAME</button>
 
   <div id="page-index" class="page active">
     <div id="header">
-      <img src="images/VALENTINE.gif" alt="Valentine's Image" />
+      <video src="images/VALENTINE.mp4" muted loop playsinline></video>
       <p>WILL YOU BE MY VALENTINE?</p>
     </div>
     <div class="button-container">
       <button class="button" id="yes-button" onclick="goTo('yes')">YES</button>
-      <button class="button" id="no-button" onclick="goTo('no1')">NO</button>
+      <button class="button" id="no-button" onclick="handleNoClick()">NO</button>
     </div>
   </div>
 
@@ -103,35 +25,35 @@
     <div id="header"><p>WILL YOU BE MY VALENTINE?</p></div>
     <div class="button-container">
       <button class="button" id="yes-button" onclick="goTo('yes')">YES</button>
-      <button class="button no-small" onclick="goTo('no2')">NO</button>
+      <button class="button no-button" id="no-button-1" onclick="handleNoClick()">NO</button>
     </div>
     <div class="img-message">
       <p>I think you missed clicked 😅</p>
-      <img src="images/NO1.gif" alt="Valentine's Image" />
+      <video src="images/NO1.mp4" muted loop playsinline></video>
     </div>
   </div>
 
   <div id="page-no2" class="page">
     <div id="header"><p>WILL YOU BE MY VALENTINE?</p></div>
     <div class="button-container">
-      <button class="button yes-big" onclick="goTo('yes')">YES</button>
-      <button class="button no-tiny" onclick="goTo('no3')">NO</button>
+      <button class="button" id="yes-button" onclick="goTo('yes')">YES</button>
+      <button class="button no-button" id="no-button-2" onclick="handleNoClick()">NO</button>
     </div>
     <div class="img-message">
       <p>You don't love me anymore? 😟</p>
-      <img src="images/NO2.gif" alt="Valentine's Image" />
+      <video src="images/NO2.mp4" muted loop playsinline></video>
     </div>
   </div>
-  
+
   <div id="page-no3" class="page">
     <div id="header"><p>WILL YOU BE MY VALENTINE?</p></div>
     <div class="button-container">
-      <button class="button" style="background-color: #4caf50;" onclick="goTo('yes')">YES</button>
-      <button class="button" style="background-color: #e91e63;" onclick="goTo('yes')">YES</button>
+      <button class="button" style="background-color:#4caf50;" onclick="goTo('yes')">YES</button>
+      <button class="button" style="background-color:#e91e63;" onclick="goTo('yes')">YES</button>
     </div>
     <div class="img-message">
       <p>I know you're just messing with me 😚</p>
-      <img src="images/NO3.gif" alt="Valentine's Image" />
+      <video src="images/NO3.mp4" muted loop playsinline></video>
     </div>
   </div>
 
@@ -139,20 +61,14 @@
     <div id="header"><p>WILL YOU BE MY VALENTINE?</p></div>
     <div class="button-container">
       <button class="button" style="background-color: #4caf50;" onclick="goTo('yes')">YES</button>
-      <button class="button" onclick="goTo('index')">LET ME THINK AGAIN</button>
+      <button class="button faded-button" onclick="resetGame()">LET ME THINK AGAIN</button>
     </div>
     <div id="fancy-message">
       <p>YEHEYY!!! 🎉 THANK YOU, MY BUBU!! 🥳💖</p>
-      <img src="images/YES.gif" alt="Valentine's Image" />
+      <video src="images/YES.mp4" muted loop playsinline></video>
     </div>
   </div>
 
-  <script>
-    function goTo(page) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(`page-${page}`).classList.add('active');
-    }
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
