@@ -7,12 +7,10 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body oncontextmenu="return false">
-
   <button id="exit-button" onclick="exitGame()">EXIT GAME</button>
-
   <div id="page-index" class="page active">
     <div id="header">
-      <video src="images/VALENTINE.mp4" muted loop playsinline></video>
+      <video class="responsive-video" src="images/VALENTINE.mp4" muted loop playsinline></video>
       <p>WILL YOU BE MY VALENTINE?</p>
     </div>
     <div class="button-container">
@@ -20,7 +18,6 @@
       <button class="button" id="no-button" onclick="handleNoClick()">NO</button>
     </div>
   </div>
-
   <div id="page-no1" class="page">
     <div id="header"><p>WILL YOU BE MY VALENTINE?</p></div>
     <div class="button-container">
@@ -29,10 +26,9 @@
     </div>
     <div class="img-message">
       <p>I think you missed clicked 😅</p>
-      <video src="images/NO1.mp4" muted loop playsinline></video>
+      <video class="responsive-video" src="images/NO1.mp4" muted loop playsinline></video>
     </div>
   </div>
-
   <div id="page-no2" class="page">
     <div id="header"><p>WILL YOU BE MY VALENTINE?</p></div>
     <div class="button-container">
@@ -41,34 +37,31 @@
     </div>
     <div class="img-message">
       <p>You don't love me anymore? 😟</p>
-      <video src="images/NO2.mp4" muted loop playsinline></video>
+      <video class="responsive-video" src="images/NO2.mp4" muted loop playsinline></video>
     </div>
   </div>
-
   <div id="page-no3" class="page">
     <div id="header"><p>WILL YOU BE MY VALENTINE?</p></div>
     <div class="button-container">
-      <button class="button" style="background-color:#4caf50;" onclick="goTo('yes')">YES</button>
-      <button class="button" style="background-color:#e91e63;" onclick="goTo('yes')">YES</button>
+      <button class="button" style="background-color:#f78da7;" onclick="goTo('yes')">YES</button>
+      <button class="button" style="background-color:#FFD1DC;" onclick="goTo('yes')">YES</button>
     </div>
     <div class="img-message">
       <p>I know you're just messing with me 😚</p>
-      <video src="images/NO3.mp4" muted loop playsinline></video>
+      <video class="responsive-video" src="images/NO3.mp4" muted loop playsinline></video>
     </div>
   </div>
-
   <div id="page-yes" class="page">
     <div id="header"><p>WILL YOU BE MY VALENTINE?</p></div>
     <div class="button-container">
-      <button class="button" style="background-color: #4caf50;" onclick="goTo('yes')">YES</button>
+      <button class="button" style="background-color: #f78da7;" onclick="goTo('yes')">YES</button>
       <button class="button faded-button" onclick="resetGame()">LET ME THINK AGAIN</button>
     </div>
     <div id="fancy-message">
       <p>YEHEYY!!! 🎉 THANK YOU, MY BUBU!! 🥳💖</p>
-      <video src="images/YES.mp4" muted loop playsinline></video>
+      <video class="responsive-video" src="images/YES.mp4" muted loop playsinline></video>
     </div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
