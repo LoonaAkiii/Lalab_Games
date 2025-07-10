@@ -35,14 +35,20 @@ function preloadImages() {
 function createCard(pair) {
   const card = document.createElement('div');
   card.classList.add('card');
-  const placeholder = document.createElement('img');
-  placeholder.src = pair.src.replace('.webm', '.png');
-  placeholder.alt = 'card image';
-  placeholder.loading = 'lazy';
-  placeholder.style.width = '100%';
-  placeholder.style.height = '100%';
-  placeholder.style.objectFit = 'cover';
-  card.appendChild(placeholder);
+  const img = document.createElement('img');
+  img.src = pair.src.replace('.webm', '.png');
+  img.alt = 'card image';
+  img.loading = 'lazy';
+  img.style.display = 'none';
+  const video = document.createElement('video');
+  video.src = pair.src;
+  video.loop = true;
+  video.autoplay = false;
+  video.muted = true;
+  video.playsInline = true;
+  video.style.display = 'none';
+  card.appendChild(img);
+  card.appendChild(video);
   card.dataset.match = pair.match;
   card.dataset.src = pair.src;
   card.dataset.status = 'unflipped';
@@ -51,22 +57,13 @@ function createCard(pair) {
 }
 function flipCard() {
   if (lockBoard || this === firstCard || this.dataset.status === 'matched') return;
-  if (this.dataset.status === 'unflipped') {
-    const video = document.createElement('video');
-    video.src = this.dataset.src;
-    video.loop = true;
-    video.autoplay = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.style.width = '100%';
-    video.style.height = '100%';
-    video.style.objectFit = 'cover';
-    this.appendChild(video);
-    video.play().catch(() => {});
-    this.dataset.status = 'flipped';
-    const oldImg = this.querySelector('img');
-    if (oldImg) this.removeChild(oldImg);
-  }
+  const video = this.querySelector('video');
+  const img = this.querySelector('img');
+  img.style.display = 'none';
+  video.style.display = 'block';
+  video.currentTime = 0;
+  video.play();
+  this.dataset.status = 'flipped';
   this.classList.add('flipped');
   if (!firstCard) {
     firstCard = this;
@@ -80,7 +77,6 @@ function checkForMatch() {
   const isMatch = firstCard.dataset.match === secondCard.dataset.src;
   if (isMatch) {
     markAsMatched();
-    disableCards();
   } else {
     unflipCards();
   }
@@ -89,32 +85,15 @@ function markAsMatched() {
   [firstCard, secondCard].forEach(card => {
     card.classList.add('matched');
     card.dataset.status = 'matched';
-    replaceVideoWithSnapshot(card);
-  });
-}
-function replaceVideoWithSnapshot(card) {
-  const video = card.querySelector('video');
-  if (video) {
+    const video = card.querySelector('video');
+    const img = card.querySelector('img');
     video.pause();
-    video.removeAttribute('src');
-    video.load();
-    video.remove();
-  }
-  const oldImg = card.querySelector('img');
-  if (oldImg) oldImg.remove();
-  const snapshot = document.createElement('img');
-  snapshot.src = card.dataset.src.replace('.webm', '.png');
-  snapshot.alt = 'Matched Snapshot';
-  snapshot.style.width = '100%';
-  snapshot.style.height = '100%';
-  snapshot.style.objectFit = 'cover';
-  card.appendChild(snapshot);
-}
-function disableCards() {
-  firstCard.removeEventListener('click', flipCard);
-  secondCard.removeEventListener('click', flipCard);
-  resetBoard();
+    video.style.display = 'none';
+    img.style.display = 'block';
+    card.removeEventListener('click', flipCard);
+  });
   matches++;
+  resetBoard();
   if (matches === cardImages.length / 2) {
     setTimeout(showWinDialog, 500);
   }
@@ -122,25 +101,13 @@ function disableCards() {
 function unflipCards() {
   setTimeout(() => {
     [firstCard, secondCard].forEach(card => {
+      const video = card.querySelector('video');
+      const img = card.querySelector('img');
+      video.pause();
+      video.style.display = 'none';
+      img.style.display = 'none';
       card.classList.remove('flipped');
       card.dataset.status = 'unflipped';
-      const video = card.querySelector('video');
-      if (video) {
-        video.pause();
-        video.removeAttribute('src');
-        video.load();
-        video.remove();
-      }
-      const oldImg = card.querySelector('img');
-      if (oldImg) oldImg.remove();
-      const img = document.createElement('img');
-      img.src = card.dataset.src.replace('.webm', '.png');
-      img.alt = 'Card preview';
-      img.style.width = '100%';
-      img.style.height = '100%';
-      img.style.objectFit = 'cover';
-      img.loading = 'lazy';
-      card.appendChild(img);
     });
     resetBoard();
   }, 1000);
@@ -156,14 +123,14 @@ function showWinDialog() {
     document.getElementById('gameBoard').classList.add('hidden');
     document.querySelector('h1').classList.add('hidden');
     showDoubleNyeheyyy();
-  });
+  }, { once: true });
 }
 function showDoubleNyeheyyy() {
   document.getElementById('doubleNyeheyyySection').classList.remove('hidden');
   document.getElementById('letterButton').addEventListener('click', () => {
     document.getElementById('letterFromDuduContainer').classList.remove('hidden');
     document.getElementById('doubleNyeheyyySection').classList.add('hidden');
-  });
+  }, { once: true });
 }
 function handleNoButtonClick() {
   const btn = document.getElementById('noButton');
@@ -174,10 +141,13 @@ function handleNoButtonClick() {
   }
 }
 document.getElementById('noButton').addEventListener('click', handleNoButtonClick);
-document.getElementById('exitButtonFixed').addEventListener('click', () => {
-  document.body.innerHTML = '';
+document.getElementById('exit-button').addEventListener('click', () => {
   window.location.href = "../index.html";
 });
+document.getElementById('letterButton').addEventListener('click', () => {
+  document.getElementById('letterFromDuduContainer').classList.remove('hidden');
+  document.getElementById('doubleNyeheyyySection').classList.add('hidden');
+}, { once: true });
 function initGame() {
   shuffle(cardImages);
   preloadImages();
@@ -187,4 +157,16 @@ function initGame() {
     board.appendChild(card);
   });
 }
+document.getElementById('playAgainButton').addEventListener('click', () => {
+  document.getElementById('letterFromDuduContainer').classList.add('hidden');
+  document.getElementById('doubleNyeheyyySection').classList.add('hidden');
+  document.querySelector('h1').classList.remove('hidden');
+  document.getElementById('gameBoard').classList.remove('hidden');
+  document.getElementById('gameBoard').innerHTML = '';
+  matches = 0;
+  firstCard = null;
+  secondCard = null;
+  lockBoard = false;
+  initGame();
+});
 initGame();

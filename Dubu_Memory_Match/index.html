@@ -7,7 +7,8 @@
   <title>Dudu & Bubu Match Card Game</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body oncontextmenu="return false">
+  <button id="exit-button">EXIT GAME</button>
   <h1>Dudu & Bubu Match Card Game</h1>
   <div class="game-board" id="gameBoard"></div>
   <div id="winDialog" class="dialog hidden">
@@ -29,8 +30,8 @@
   </div>
   <div id="letterFromDuduContainer" class="hidden">
     <img id="letterFromDuduImage" src="secret.png" alt="Letter from Dudu" loading="lazy">
+    <button id="playAgainButton">Play Again</button>
   </div>
-  <button id="exitButtonFixed">⟵ BACK TO GAME HUB</button>
   <script src="script.js"></script>
 </body>
 </html>
