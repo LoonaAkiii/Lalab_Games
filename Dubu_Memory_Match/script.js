@@ -14,7 +14,7 @@ const cardImages = [
   { src: 'icecream_bubu.webm', match: 'icecream_dudu.webm' },
   { src: 'icecream_dudu.webm', match: 'icecream_bubu.webm' },
   { src: 'work_bubu.webm', match: 'work_dudu.webm' },
-  { src: 'work_dudu.webm', match: 'work_bubu.webm' },
+  { src: 'work_dudu.webm', match: 'work_bubu.webm' }
 ];
 let firstCard = null;
 let secondCard = null;
@@ -46,6 +46,8 @@ function createCard(pair) {
   video.autoplay = false;
   video.muted = true;
   video.playsInline = true;
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
   video.preload = 'auto';
   video.classList.add('hidden');
   card.appendChild(img);
@@ -62,12 +64,14 @@ function flipCard() {
   const img = this.querySelector('img');
   img.classList.add('hidden');
   video.classList.remove('hidden');
-  video.currentTime = 0;
-  const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-    });
-  }
+  video.load();
+  setTimeout(() => {
+    video.currentTime = 0;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+  }, 50);
   this.dataset.status = 'flipped';
   this.classList.add('flipped');
   if (!firstCard) {
