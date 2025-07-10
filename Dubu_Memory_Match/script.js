@@ -39,14 +39,15 @@ function createCard(pair) {
   img.src = pair.src.replace('.webm', '.png');
   img.alt = 'card image';
   img.loading = 'lazy';
-  img.style.display = 'none';
+  img.classList.add('hidden');
   const video = document.createElement('video');
   video.src = pair.src;
   video.loop = true;
   video.autoplay = false;
   video.muted = true;
   video.playsInline = true;
-  video.style.display = 'none';
+  video.preload = 'auto';
+  video.classList.add('hidden');
   card.appendChild(img);
   card.appendChild(video);
   card.dataset.match = pair.match;
@@ -59,10 +60,14 @@ function flipCard() {
   if (lockBoard || this === firstCard || this.dataset.status === 'matched') return;
   const video = this.querySelector('video');
   const img = this.querySelector('img');
-  img.style.display = 'none';
-  video.style.display = 'block';
+  img.classList.add('hidden');
+  video.classList.remove('hidden');
   video.currentTime = 0;
-  video.play();
+  const playPromise = video.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+    });
+  }
   this.dataset.status = 'flipped';
   this.classList.add('flipped');
   if (!firstCard) {
@@ -88,8 +93,8 @@ function markAsMatched() {
     const video = card.querySelector('video');
     const img = card.querySelector('img');
     video.pause();
-    video.style.display = 'none';
-    img.style.display = 'block';
+    video.classList.add('hidden');
+    img.classList.remove('hidden');
     card.removeEventListener('click', flipCard);
   });
   matches++;
@@ -104,8 +109,8 @@ function unflipCards() {
       const video = card.querySelector('video');
       const img = card.querySelector('img');
       video.pause();
-      video.style.display = 'none';
-      img.style.display = 'none';
+      video.classList.add('hidden');
+      img.classList.add('hidden');
       card.classList.remove('flipped');
       card.dataset.status = 'unflipped';
     });
@@ -148,15 +153,6 @@ document.getElementById('letterButton').addEventListener('click', () => {
   document.getElementById('letterFromDuduContainer').classList.remove('hidden');
   document.getElementById('doubleNyeheyyySection').classList.add('hidden');
 }, { once: true });
-function initGame() {
-  shuffle(cardImages);
-  preloadImages();
-  const board = document.getElementById('gameBoard');
-  cardImages.forEach(pair => {
-    const card = createCard(pair);
-    board.appendChild(card);
-  });
-}
 document.getElementById('playAgainButton').addEventListener('click', () => {
   document.getElementById('letterFromDuduContainer').classList.add('hidden');
   document.getElementById('doubleNyeheyyySection').classList.add('hidden');
@@ -169,4 +165,13 @@ document.getElementById('playAgainButton').addEventListener('click', () => {
   lockBoard = false;
   initGame();
 });
+function initGame() {
+  shuffle(cardImages);
+  preloadImages();
+  const board = document.getElementById('gameBoard');
+  cardImages.forEach(pair => {
+    const card = createCard(pair);
+    board.appendChild(card);
+  });
+}
 initGame();
