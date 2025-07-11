@@ -59,14 +59,21 @@ h1 {
 }
 .card video,
 .card img {
-  display: none;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.card img.hidden,
+.card video.hidden {
+  display: none;
 }
 .card.flipped video {
   display: block;
+  z-index: 2;
 }
 .card.flipped img {
   display: none;
@@ -77,6 +84,7 @@ h1 {
 }
 .card.matched img {
   display: block;
+  z-index: 2;
 }
 #letterFromDuduContainer img {
   width: 90vw;
@@ -140,9 +148,7 @@ h1 {
   align-items: center;
 }
 .nyeheyyy-gif {
-  max-width: 90vw;
-  width: 100%;
-  height: auto;
+  max-width: 300px;
   margin-bottom: 20px;
   border-radius: 10px;
 }

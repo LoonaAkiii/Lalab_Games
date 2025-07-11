@@ -14,7 +14,7 @@ const cardImages = [
   { src: 'icecream_bubu.mp4', match: 'icecream_dudu.mp4' },
   { src: 'icecream_dudu.mp4', match: 'icecream_bubu.mp4' },
   { src: 'work_bubu.mp4', match: 'work_dudu.mp4' },
-  { src: 'work_dudu.mp4', match: 'work_bubu.mp4' }
+  { src: 'work_dudu.mp4', match: 'work_bubu.mp4' },
 ];
 let firstCard = null;
 let secondCard = null;
@@ -38,15 +38,15 @@ function createCard(pair) {
   const img = document.createElement('img');
   img.src = pair.src.replace('.mp4', '.png');
   img.alt = 'card image';
+  img.loading = 'lazy';
   img.classList.add('hidden');
   const video = document.createElement('video');
-  const source = document.createElement('source');
-  source.src = pair.src;
-  source.type = 'video/mp4';
-  video.appendChild(source);
+  video.src = pair.src;
   video.loop = true;
+  video.autoplay = false;
   video.muted = true;
   video.playsInline = true;
+  video.preload = 'auto';
   video.classList.add('hidden');
   card.appendChild(img);
   card.appendChild(video);
@@ -87,12 +87,13 @@ function checkForMatch() {
 }
 function markAsMatched() {
   [firstCard, secondCard].forEach(card => {
-    card.classList.add('matched');
-    card.dataset.status = 'matched';
     const video = card.querySelector('video');
     const img = card.querySelector('img');
-    video.classList.add('hidden');
+    video.pause();
+    video.remove();
     img.classList.remove('hidden');
+    card.classList.add('matched');
+    card.dataset.status = 'matched';
     card.removeEventListener('click', flipCard);
   });
   matches++;
@@ -129,11 +130,9 @@ function showWinDialog() {
   }, { once: true });
 }
 function showDoubleNyeheyyy() {
-  const nyeheyyyVideo = document.querySelector('.nyeheyyy-gif');
-  if (nyeheyyyVideo) {
-    nyeheyyyVideo.currentTime = 0;
-    nyeheyyyVideo.play().catch(() => {});
-  }
+  const nyeheyyyVid = document.querySelector('.nyeheyyy-gif');
+  nyeheyyyVid.currentTime = 0;
+  nyeheyyyVid.play();
   document.getElementById('doubleNyeheyyySection').classList.remove('hidden');
   document.getElementById('letterButton').addEventListener('click', () => {
     document.getElementById('letterFromDuduContainer').classList.remove('hidden');
