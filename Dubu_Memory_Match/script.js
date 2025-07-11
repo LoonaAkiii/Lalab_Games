@@ -38,7 +38,6 @@ function createCard(pair) {
   const img = document.createElement('img');
   img.src = pair.src.replace('.mp4', '.png');
   img.alt = 'card image';
-  img.loading = 'lazy';
   img.classList.add('hidden');
   const video = document.createElement('video');
   const source = document.createElement('source');
@@ -63,7 +62,7 @@ function flipCard() {
   const img = this.querySelector('img');
   img.classList.add('hidden');
   video.classList.remove('hidden');
-  video.load();
+  video.currentTime = 0;
   const playPromise = video.play();
   if (playPromise !== undefined) {
     playPromise.catch(() => {});
@@ -92,7 +91,6 @@ function markAsMatched() {
     card.dataset.status = 'matched';
     const video = card.querySelector('video');
     const img = card.querySelector('img');
-    video.pause();
     video.classList.add('hidden');
     img.classList.remove('hidden');
     card.removeEventListener('click', flipCard);
@@ -131,10 +129,12 @@ function showWinDialog() {
   }, { once: true });
 }
 function showDoubleNyeheyyy() {
-  document.getElementById('doubleNyeheyyySection').classList.remove('hidden');
   const nyeheyyyVideo = document.querySelector('.nyeheyyy-gif');
-  nyeheyyyVideo.load();
-  nyeheyyyVideo.play();
+  if (nyeheyyyVideo) {
+    nyeheyyyVideo.currentTime = 0;
+    nyeheyyyVideo.play().catch(() => {});
+  }
+  document.getElementById('doubleNyeheyyySection').classList.remove('hidden');
   document.getElementById('letterButton').addEventListener('click', () => {
     document.getElementById('letterFromDuduContainer').classList.remove('hidden');
     document.getElementById('doubleNyeheyyySection').classList.add('hidden');
