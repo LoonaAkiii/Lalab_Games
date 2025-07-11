@@ -1,0 +1,13 @@
+Background Color: linear-gradient(to bottom right, #ffe6f0, #ffd6ec);
+Font Color: #a20060
+Button Font Color: #ffffff
+Cover/Canvas Color: #ffffff
+Yes Button Color: #f78da7
+Yes Button Hover Color: #d16b80 
+No Button: #FFD1DC
+No Button Hover Color: #DEB5BF
+Regular Button Color: #ff66a3
+Regular Button Hover Color: #D45487
+Exit Button Color: #f78da7
+Exit Button Hover Color: #d16b80
+Outline/Border Color: #D45487
