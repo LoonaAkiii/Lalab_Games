@@ -2,161 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Flower Drawer</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  <h2>🌸 Flower For Bubu</h2>
+<body oncontextmenu="return false">
+  <button id="exit-button">EXIT GAME</button>
+  <h2 style="margin-top: 60px;">🌸 Flower For Bubu</h2>
   <p><strong>Dudu:</strong> I have a gift for you >:33</p>
-
   <div class="controls">
     <input type="text" id="commandInput" placeholder="type..." />
     <button id="drawBtn">Send</button>
   </div>
-
   <div id="notification" class="hidden"></div>
-
-  <canvas id="flowerCanvas" width="400" height="500"></canvas>
-
-  <script>
-    const canvas = document.getElementById('flowerCanvas');
-    const ctx = canvas.getContext('2d');
-    const btn = document.getElementById('drawBtn');
-    const input = document.getElementById('commandInput');
-    const notif = document.getElementById('notification');
-
-    const flowerMessages = [
-      `Nyeheheee flowers for bubu!!🌸 >:33`,
-      `Fabooty flowerss!! >:DD`,
-      `Dudu flowers for Bubuuu!! >:DD`,
-      `Flowers ka sakinnn!! >;P`,
-      `You loves me... you loves me not... you loves me!! >:DD`
-    ];
-
-    const bantotMessages = [
-      `Bantotie ka!! >:((`,
-      `Hanyaaa!! >:UU`,
-      `Wala to guyss >:UU`
-    ];
-
-    let isDrawing = false;
-
-    function getRandomColor() {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
-
-    function showNotification(message, isError = false) {
-      notif.textContent = message;
-      notif.className = isError ? 'error' : 'success';
-      clearTimeout(notif._timeout);
-      notif._timeout = setTimeout(() => {
-        notif.className = 'hidden';
-      }, 6000);
-    }
-
-    function cleanInput(text) {
-      return text.toLowerCase().replace(/[.,!?]/g, '').trim();
-    }
-
-    btn.addEventListener('click', () => {
-      if (isDrawing) return;
-
-      const raw = input.value;
-      const cleaned = cleanInput(raw);
-
-      const triggers = ['hello', 'hi', 'how are you', 'what', 'bantot', 'fabooty', 'cutie', 'buttcrack', 'dudu', 'thank you', 'wala', 'ano'];
-      const matches = triggers.some(trigger => cleaned.includes(trigger));
-
-      isDrawing = true;
-      btn.disabled = true;
-      input.disabled = true;
-
-      if (matches) {
-        const color = getRandomColor();
-        const message = flowerMessages[Math.floor(Math.random() * flowerMessages.length)];
-        showNotification(message, false);
-        drawFlowerAnimated(color, () => {
-          isDrawing = false;
-          btn.disabled = false;
-          input.disabled = false;
-        });
-      } else {
-        const errorMessage = bantotMessages[Math.floor(Math.random() * bantotMessages.length)];
-        showNotification(errorMessage, true);
-        setTimeout(() => {
-          isDrawing = false;
-          btn.disabled = false;
-          input.disabled = false;
-        }, 1000);
-      }
-    });
-
-    function drawStem(centerX, centerY) {
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY + 40);
-      ctx.lineTo(centerX, centerY + 180);
-      ctx.strokeStyle = 'green';
-      ctx.lineWidth = 8;
-      ctx.stroke();
-    }
-
-    function drawPetal(centerX, centerY, angle, petalColor) {
-      const petalLength = 100;
-      const petalWidth = 40;
-
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.rotate(angle);
-
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(petalWidth / 2, -petalLength / 2, petalWidth / 2, -petalLength, 0, -petalLength);
-      ctx.bezierCurveTo(-petalWidth / 2, -petalLength, -petalWidth / 2, -petalLength / 2, 0, 0);
-      ctx.fillStyle = petalColor;
-      ctx.fill();
-      ctx.strokeStyle = '#444';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    function drawCenter(centerX, centerY) {
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 35, 0, 2 * Math.PI);
-      ctx.fillStyle = 'gold';
-      ctx.strokeStyle = '#cc9900';
-      ctx.lineWidth = 2;
-      ctx.fill();
-      ctx.stroke();
-    }
-
-    function drawFlowerAnimated(petalColor = 'pink', callback) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const centerX = canvas.width / 2;
-      const centerY = 200;
-      const petalCount = 8;
-
-      drawStem(centerX, centerY);
-
-      let i = 0;
-      const interval = setInterval(() => {
-        if (i < petalCount) {
-          const angle = (i * 2 * Math.PI) / petalCount;
-          drawPetal(centerX, centerY, angle, petalColor);
-          i++;
-        } else {
-          clearInterval(interval);
-          drawCenter(centerX, centerY);
-          if (typeof callback === 'function') callback();
-        }
-      }, 300);
-    }
-  </script>
+  <div class="rose-container hidden">
+    <div class="rose" id="rose">
+      <div class="flower">
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+      </div>
+      <div class="leaf">
+        <div class="stem"></div>
+        <div class="leafs"></div>
+        <div class="leafs"></div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
