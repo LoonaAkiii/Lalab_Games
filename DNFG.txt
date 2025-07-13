@@ -15,7 +15,7 @@ Outline/Border Color: #D45487
 Title Size: 30px
 Hub Images Dimensions: 400 x 250
 
---Exit Button--
+--EXIT BUTTON--
 Dimensions: 128.02. x 38
 Background Color: #f78da7
 Hover Color: #d16b80
