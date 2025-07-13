@@ -9,10 +9,23 @@ No Button: #FFD1DC
 No Button Hover Color: #DEB5BF
 Regular Button Color: #ff66a3
 Regular Button Hover Color: #D45487
-Exit Button Color: #f78da7
-Exit Button Hover Color: #d16b80
 Outline/Border Color: #D45487
 
 --SIZES--
 Title Size: 30px
 Hub Images Dimensions: 400 x 250
+
+--Exit Button--
+Dimensions: 128.02. x 38
+Background Color: #f78da7
+Hover Color: #d16b80
+Font Size: 16px Arial
+Padding Size: 10x 20px
+Position: absolute;
+Top: 10px;
+Left: 10px;
+Border: none;
+Border-Radius: 20px;
+Font Weight: bold;
+Cursor: pointer;
+Box Shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
