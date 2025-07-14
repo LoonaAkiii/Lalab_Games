@@ -9,7 +9,7 @@
   touch-action: manipulation;
 }
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Jua', sans-serif;
   background: linear-gradient(to bottom right, #ffe6f0, #ffd6ec);
   padding: 1rem;
   overflow-x: hidden;
