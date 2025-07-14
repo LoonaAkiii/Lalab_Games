@@ -7,15 +7,19 @@ Yes Button Color: #f78da7
 Yes Button Hover Color: #d16b80 
 No Button: #FFD1DC
 No Button Hover Color: #DEB5BF
-Regular Button Color: #ff66a3
-Regular Button Hover Color: #D45487
 Outline/Border Color: #D45487
 
 --SIZES--
 Title Size: 30px
 Hub Images Dimensions: 400 x 250
 
---EXIT BUTTON--
+--Regular Button--
+Font Size: 16px
+Font Family: 'Jua', sans-serif
+Button Color: #ff66a3
+Button Hover Color: #D45487
+
+--Exit Button--
 Dimensions: 128.02. x 38
 Background Color: #f78da7
 Hover Color: #d16b80
