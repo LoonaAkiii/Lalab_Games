@@ -6,7 +6,7 @@
 }
 body {
   background: linear-gradient(to bottom right, #ffe6f0, #ffd6ec);
-  font-family: Arial, sans-serif;
+  font-family: 'Jua', sans-serif;
   margin: 0;
   padding: 0;
   display: flex;
@@ -57,6 +57,7 @@ p {
 .button {
   padding: 20px 45px;
   font-size: 24px;
+  font-family: 'Jua', sans-serif;
   font-weight: bold;
   color: #fff;
   background-color: #FFD1DC;
@@ -96,6 +97,7 @@ p {
   border: none;
   border-radius: 20px;
   color: #fff;
+  font-family: 'Jua', sans-serif;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
