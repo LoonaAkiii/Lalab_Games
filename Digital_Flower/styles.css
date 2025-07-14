@@ -3,7 +3,7 @@
   touch-action: manipulation;
 }
 body {
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: 'Jua', sans-serif;
   margin: 0;
   padding: 20px;
   background: linear-gradient(to bottom right, #ffe6f0, #ffd6ec);
@@ -43,6 +43,7 @@ input, button {
 }
 input {
   width: 230px;
+  font-family: 'Jua', sans-serif;
   background: #fff;
 }
 input:focus {
@@ -52,6 +53,7 @@ input:focus {
 button {
   background-color: #ff66a3;
   color: white;
+  font-family: 'Jua', sans-serif;
   border: none;
   cursor: pointer;
 }
@@ -99,6 +101,7 @@ button:hover {
   border: none;
   border-radius: 20px;
   color: white;
+  font-family: 'Jua', sans-serif;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
@@ -232,6 +235,6 @@ button:hover {
 @media (max-width: 480px) {
   input, button {
     width: 100%;
-    font-size: 14px;
+    font-size: 16px;
   }
 }
