@@ -18,7 +18,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
+  font-family: 'Jua', sans-serif;
   background: linear-gradient(to bottom right, #ffe6f0, #ffd6ec);
   position: relative;
 }
@@ -114,6 +114,7 @@ h1 {
 }
 .dialog button {
   background-color: #f78da7;
+  font-family: 'Jua', sans-serif;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -126,6 +127,7 @@ h1 {
 }
 #noButton {
   background-color: #FFD1DC;
+  font-family: 'Jua', sans-serif;
   margin-right: 10px;
 }
 #noButton:hover {
@@ -154,6 +156,7 @@ h1 {
 }
 #letterButton {
   background-color: #ff66a3;
+  font-family: 'Jua', sans-serif;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -162,7 +165,7 @@ h1 {
   margin-top: 10px;
 }
 #letterButton:hover {
-  background-color: #b12e4c;
+  background-color: #D45487;
 }
 #exit-button {
   position: absolute;
@@ -170,6 +173,7 @@ h1 {
   left: 10px;
   background-color: #f78da7;
   border: none;
+  font-family: 'Jua', sans-serif;
   border-radius: 20px;
   color: white;
   padding: 10px 20px;
@@ -185,6 +189,7 @@ h1 {
 #playAgainButton {
   background-color: #ff66a3;
   color: white;
+  font-family: 'Jua', sans-serif;
   border: none;
   padding: 10px 20px;
   border-radius: 10px;
