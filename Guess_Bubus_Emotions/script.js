@@ -113,6 +113,9 @@ function resetGame() {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
+  const giveUpBtn = document.getElementById("new-image");
+  giveUpClickCount = 0;
+  giveUpBtn.style.transform = 'scale(1)';
   displayNewImage();
 }
 function checkGuess() {
@@ -229,6 +232,9 @@ function resetToMainScreen() {
   msg.textContent = '';
   msg.classList.remove('incorrect');
   msg.style.display = 'block';
+  const giveUpBtn = document.getElementById("new-image");
+  giveUpClickCount = 0;
+  giveUpBtn.style.transform = 'scale(1)';
   displayNewImage();
 }
 document.getElementById("start-game").addEventListener('click', showGameElements);

@@ -10,6 +10,7 @@ body {
     -webkit-touch-callout: none;
     touch-action: manipulation;
     user-select: none;
+    font-family: 'Jua', sans-serif;
 }
 input, textarea, button {
   touch-action: manipulation;
@@ -17,6 +18,7 @@ input, textarea, button {
 .game-container {
     position: relative;
     background-color: #fff;
+    border-radius: 25px;
     padding: 20px;
     border: 4px solid #a20060;
     text-align: center;
@@ -33,7 +35,7 @@ input, textarea, button {
   background-color: #f78da7;
   color: #fff;
   font-size: 16px;
-  font-family: Arial, sans-serif;
+  font-family: 'Jua', sans-serif;
   font-weight: bold;
   padding: 10px 20px;
   border: none;
@@ -90,6 +92,7 @@ img {
     margin: 10px auto;
     display: block;
     box-sizing: border-box;
+    font-family: 'Jua', sans-serif;
     border-radius: 20px;
     border: 2px solid #ddd;
 }
@@ -101,6 +104,7 @@ button {
     width: 100%;
     max-width: 300px;
     box-sizing: border-box;
+    font-family: 'Jua', sans-serif;
     display: block;
     border: none;
     border-radius: 25px;
@@ -141,22 +145,6 @@ button:hover {
     color: red;
     text-align: center;
     margin: 20px 0;
-}
-#back-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 10px auto;
-    display: block;
-    border: none;
-    border-radius: 25px;
-    background-color: #008080;
-    color: #fff;
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-#back-button:hover {
-    background-color: #006666;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 #failure-image, #failure-note, #back-button {
     display: none;
