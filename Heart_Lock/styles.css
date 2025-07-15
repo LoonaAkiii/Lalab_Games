@@ -31,9 +31,11 @@ body * {
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   z-index: 99;
+  transition: transform 0.3s ease;
 }
 #exitButton:hover {
   background-color: #d16b80;
+  transform: scale(1.05);
 }
 #lockAgainButton {
   margin-top: 20px;
@@ -46,9 +48,11 @@ body * {
   border-radius: 20px;
   padding: 10px 20px;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
 #lockAgainButton:hover {
   background-color: #D45487;
+  transform: scale(1.05);
 }
 #lockScreen {
   height: 100vh;
