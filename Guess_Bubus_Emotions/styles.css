@@ -110,11 +110,12 @@ button {
     border-radius: 25px;
     background-color: #ff66a3;
     color: #fff;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s ease;
 }
 button:hover {
     background-color: #D45487;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
 }
 #new-image {
     background-color: #f78da7;
@@ -175,9 +176,11 @@ button:hover {
     margin: 20px;
     font-size: 18px;
     color: green;
+    transform: scale(1.05);
 }
 #message.incorrect {
     color: red;
+    transform: scale(1.05);
 }
 #random-image, #guess-input, #submit-guess, #new-image, #level-timer-container {
     display: none;
@@ -206,10 +209,11 @@ button:hover {
     border-radius: 25px;
     background-color: #ff66a3;
     color: #fff;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s ease;
 }
 #time-travel-back:hover {
     background-color: #D45487;
+    transform: scale(1.05);
 }
 @media (max-width: 400px) {
     h1 {
