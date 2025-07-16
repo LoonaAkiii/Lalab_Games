@@ -56,11 +56,9 @@ button {
   font-family: 'Jua', sans-serif;
   border: none;
   cursor: pointer;
-  transition: transform 0.3s ease;
 }
 button:hover {
-  background-color: #ff4d94;
-  transform: scale(1.05);
+  background-color: #D45487;
 }
 #notification {
   margin-top: 10px;
@@ -69,7 +67,8 @@ button:hover {
   font-size: 14px;
   max-width: 300px;
   text-align: center;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: scale(1);
   min-height: 40px;
   display: flex;
   align-items: center;
@@ -78,6 +77,8 @@ button:hover {
 .hidden {
   opacity: 0;
   visibility: hidden;
+  transform: scale(1);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 .success {
   background-color: #ffe0f0;
@@ -241,4 +242,12 @@ button:hover {
     width: 100%;
     font-size: 16px;
   }
+}
+@keyframes bounceClick {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.bounce {
+  animation: bounceClick 0.3s ease;
 }

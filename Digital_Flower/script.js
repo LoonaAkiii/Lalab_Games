@@ -22,12 +22,17 @@ function getRandomColor() {
   return color;
 }
 function showNotification(message, isError = false) {
-  notif.textContent = message;
-  notif.className = isError ? 'error' : 'success';
-  clearTimeout(notif._timeout);
-  notif._timeout = setTimeout(() => {
-    notif.className = 'hidden';
-  }, 6000);
+  return new Promise((resolve) => {
+    notif.textContent = message;
+    notif.className = isError ? 'error' : 'success';
+    setTimeout(() => {
+      notif.classList.add('hidden');
+      setTimeout(() => {
+        notif.className = 'hidden';
+        resolve();
+      }, 300);
+    }, 2000);
+  });
 }
 function cleanInput(text) {
   return text.toLowerCase().replace(/[.,!?]/g, '').trim();
@@ -49,8 +54,11 @@ function darkenColor(hex, percent) {
   const B = (num & 0x0000FF) - amt;
   return `#${(0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1)}`;
 }
-btn.addEventListener('click', () => {
+btn.addEventListener('click', async () => {
   if (isAnimating) return;
+  btn.classList.remove('bounce');
+  void btn.offsetWidth;
+  btn.classList.add('bounce');
   const raw = input.value;
   const cleaned = cleanInput(raw);
   const triggers = ['hello','hi','how are you','what','bantot','fabooty','cutie','buttcrack','dudu','thank you','wala','ano'];
@@ -61,24 +69,16 @@ btn.addEventListener('click', () => {
   if (matches) {
     const color = getRandomColor();
     const message = flowerMessages[Math.floor(Math.random() * flowerMessages.length)];
-    showNotification(message);
     colorizeRose(color);
     flowerContainer.classList.remove('hidden');
-
-    setTimeout(() => {
-      isAnimating = false;
-      btn.disabled = false;
-      input.disabled = false;
-    }, 2000);
+    await showNotification(message); // Wait for it to finish
   } else {
     const errorMessage = bantotMessages[Math.floor(Math.random() * bantotMessages.length)];
-    showNotification(errorMessage, true);
-    setTimeout(() => {
-      isAnimating = false;
-      btn.disabled = false;
-      input.disabled = false;
-    }, 1000);
+    await showNotification(errorMessage, true); // Wait for error message to finish
   }
+  isAnimating = false;
+  btn.disabled = false;
+  input.disabled = false;
 });
 document.getElementById('exit-button').addEventListener('click', () => {
   window.location.href = "../index.html";
