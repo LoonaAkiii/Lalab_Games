@@ -1,21 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const prompt = document.getElementById('music-prompt');
-  const yesBtn = document.getElementById('music-yes');
   const music = document.getElementById('bg-music');
   const hasConfirmed = localStorage.getItem('musicConfirmed');
   if (hasConfirmed) {
-    prompt.style.display = 'none';
     music.play().catch(() => {});
+  } else {
+    const enableMusic = () => {
+      music.play().then(() => {
+        localStorage.setItem('musicConfirmed', 'yes');
+      }).catch(() => {});
+      window.removeEventListener('click', enableMusic);
+      window.removeEventListener('touchstart', enableMusic);
+      window.removeEventListener('scroll', enableMusic);
+    };
+    window.addEventListener('click', enableMusic, { once: true });
+    window.addEventListener('touchstart', enableMusic, { once: true });
+    window.addEventListener('scroll', enableMusic, { once: true });
   }
-  yesBtn.addEventListener('click', () => {
-    music.play().then(() => {
-      localStorage.setItem('musicConfirmed', 'yes');
-      prompt.style.display = 'none';
-    }).catch(() => {
-      alert('Audio play failed. Please tap anywhere to retry.');
-    });
-  });
-  document.body.addEventListener('touchstart', () => {
-    music.play().catch(() => {});
-  }, { once: true });
 });
