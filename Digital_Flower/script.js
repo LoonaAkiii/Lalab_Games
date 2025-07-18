@@ -71,10 +71,10 @@ btn.addEventListener('click', async () => {
     const message = flowerMessages[Math.floor(Math.random() * flowerMessages.length)];
     colorizeRose(color);
     flowerContainer.classList.remove('hidden');
-    await showNotification(message); // Wait for it to finish
+    await showNotification(message);
   } else {
     const errorMessage = bantotMessages[Math.floor(Math.random() * bantotMessages.length)];
-    await showNotification(errorMessage, true); // Wait for error message to finish
+    await showNotification(errorMessage, true);
   }
   isAnimating = false;
   btn.disabled = false;
@@ -84,3 +84,33 @@ document.getElementById('exit-button').addEventListener('click', () => {
   window.location.href = "../index.html";
 });
 flowerContainer.classList.add('hidden');
+document.addEventListener('DOMContentLoaded', () => {
+  const music = document.getElementById('bg-music');
+  const hasConfirmed = localStorage.getItem('musicConfirmed');
+  const tryPlayMusic = () => {
+    if (music && music.paused) {
+      music.play().catch(() => {});
+    }
+  };
+  if (hasConfirmed) {
+    tryPlayMusic();
+  } else {
+    const enableMusic = () => {
+      music.play().then(() => {
+        localStorage.setItem('musicConfirmed', 'yes');
+      }).catch(() => {});
+      window.removeEventListener('click', enableMusic);
+      window.removeEventListener('touchstart', enableMusic);
+      window.removeEventListener('scroll', enableMusic);
+    };
+    window.addEventListener('click', enableMusic, { once: true });
+    window.addEventListener('touchstart', enableMusic, { once: true });
+    window.addEventListener('scroll', enableMusic, { once: true });
+  }
+  const resumeOnUserInteraction = () => {
+    tryPlayMusic();
+  };
+  window.addEventListener('click', resumeOnUserInteraction);
+  window.addEventListener('touchstart', resumeOnUserInteraction);
+  window.addEventListener('scroll', resumeOnUserInteraction);
+});
