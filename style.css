@@ -92,3 +92,30 @@ a {
     transform: translateY(0);
   }
 }
+.update-icon {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 24px !important;
+  color: #a20060;
+  cursor: pointer;
+  background: #ffe6f0;
+  border: 2px solid #a20060;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s, transform 0.2s;
+}
+.update-icon:hover {
+  transform: scale(1.1);
+}
+@keyframes bounceClick {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.bounce {
+  animation: bounceClick 0.3s ease;
+}

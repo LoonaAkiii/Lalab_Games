@@ -28,3 +28,21 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('touchstart', retryOnUserAction);
   window.addEventListener('scroll', retryOnUserAction);
 });
+const updateButton = document.getElementById('force-update');
+if (updateButton) {
+  updateButton.addEventListener('click', async () => {
+    updateButton.classList.add('bounce');
+    setTimeout(() => updateButton.classList.remove('bounce'), 200);
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const reg of registrations) {
+        await reg.unregister();
+      }
+      const cacheNames = await caches.keys();
+      for (const name of cacheNames) {
+        await caches.delete(name);
+      }
+      window.location.reload(true);
+    }
+  });
+}
