@@ -52,7 +52,7 @@ function darkenColor(hex, percent) {
   const R = (num >> 16) - amt;
   const G = ((num >> 8) & 0x00FF) - amt;
   const B = (num & 0x0000FF) - amt;
-  return `#${(0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1)}`;
+  return `#${(0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1)}`;
 }
 btn.addEventListener('click', async () => {
   if (isAnimating) return;
@@ -81,17 +81,42 @@ btn.addEventListener('click', async () => {
   input.disabled = false;
 });
 document.getElementById('exit-button').addEventListener('click', () => {
+  sessionStorage.removeItem('digitalflower');
   window.location.href = "../index.html";
 });
 flowerContainer.classList.add('hidden');
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.getElementById('bg-music');
+  const loadingScreen = document.getElementById('loading-screen');
+  const tapText = document.querySelector('.tap-text');
   const hasConfirmed = localStorage.getItem('musicConfirmed');
+  const alreadyLoaded = sessionStorage.getItem('digitalflower');
+  const fromHub = document.referrer.includes('index.html');
   const tryPlayMusic = () => {
     if (music && music.paused) {
       music.play().catch(() => {});
     }
   };
+  if (fromHub && !alreadyLoaded && loadingScreen && tapText) {
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      tapText.style.display = 'block';
+      const continueHandler = () => {
+        loadingScreen.style.display = 'none';
+        document.body.style.overflow = '';
+        sessionStorage.setItem('digitalflower', 'true');
+        tryPlayMusic();
+        localStorage.setItem('musicConfirmed', 'yes');
+        window.removeEventListener('click', continueHandler);
+        window.removeEventListener('touchstart', continueHandler);
+      };
+      window.addEventListener('click', continueHandler);
+      window.addEventListener('touchstart', continueHandler);
+    }, 3000);
+    return;
+  } else {
+    if (loadingScreen) loadingScreen.style.display = 'none';
+  }
   if (hasConfirmed) {
     tryPlayMusic();
   } else {
