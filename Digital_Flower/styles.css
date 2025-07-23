@@ -120,6 +120,9 @@ button:hover {
   background-color: #d16b80;
   transform: scale(1.05);
 }
+#exit-button.hidden {
+  display: none;
+}
 .rose-container {
   display: flex;
   justify-content: center;

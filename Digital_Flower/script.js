@@ -103,12 +103,25 @@ document.addEventListener('DOMContentLoaded', () => {
       tapText.style.display = 'block';
       const continueHandler = () => {
         loadingScreen.style.display = 'none';
+        document.getElementById('exit-button').classList.remove('hidden');
         document.body.style.overflow = '';
         sessionStorage.setItem('digitalflower', 'true');
-        tryPlayMusic();
         localStorage.setItem('musicConfirmed', 'yes');
         window.removeEventListener('click', continueHandler);
         window.removeEventListener('touchstart', continueHandler);
+        const blocker = document.createElement('div');
+        blocker.style.position = 'fixed';
+        blocker.style.top = '0';
+        blocker.style.left = '0';
+        blocker.style.width = '100%';
+        blocker.style.height = '100%';
+        blocker.style.zIndex = '9999';
+        blocker.style.background = 'transparent';
+        document.body.appendChild(blocker);
+        setTimeout(() => {
+          document.body.removeChild(blocker);
+        }, 300);
+        tryPlayMusic();
       };
       window.addEventListener('click', continueHandler);
       window.addEventListener('touchstart', continueHandler);
