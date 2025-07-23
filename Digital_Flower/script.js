@@ -1,6 +1,10 @@
 const btn = document.getElementById('drawBtn');
 const input = document.getElementById('commandInput');
-input.addEventListener('touchend', () => {input.focus();});
+input.addEventListener('touchend', () => {
+  setTimeout(() => {
+    input.focus();
+  }, 50);
+});
 const notif = document.getElementById('notification');
 const flowerContainer = document.querySelector('.rose-container');
 const flowerMessages = [
@@ -93,16 +97,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const hasConfirmed = localStorage.getItem('musicConfirmed');
   const alreadyLoaded = sessionStorage.getItem('digitalflower');
   const fromHub = document.referrer.includes('index.html');
+
+  const blocker = document.createElement('div');
+  blocker.style.position = 'fixed';
+  blocker.style.top = '0';
+  blocker.style.left = '0';
+  blocker.style.width = '100%';
+  blocker.style.height = '100%';
+  blocker.style.zIndex = '9999';
+  blocker.style.backgroundColor = 'transparent';
+  blocker.style.touchAction = 'none';
+  document.body.appendChild(blocker);
+
   const tryPlayMusic = () => {
     if (music && music.paused) {
       music.play().catch(() => {});
     }
   };
+
   const cleanup = () => {
     if (loadingScreen) loadingScreen.style.display = 'none';
     document.getElementById('exit-button').classList.remove('hidden');
     sessionStorage.setItem('digitalflower', 'true');
+    blocker.remove();
   };
+
   if (fromHub && !alreadyLoaded) {
     setTimeout(() => {
       tapText.style.display = 'block';
@@ -115,18 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           tryPlayMusic();
         }, 300);
-        const blocker = document.createElement('div');
-        blocker.style.position = 'fixed';
-        blocker.style.top = '0';
-        blocker.style.left = '0';
-        blocker.style.width = '100%';
-        blocker.style.height = '100%';
-        blocker.style.zIndex = '9999';
-        blocker.style.background = 'transparent';
-        document.body.appendChild(blocker);
-        setTimeout(() => {
-          blocker.remove();
-        }, 500);
       };
       window.addEventListener('click', continueHandler, { once: true });
       window.addEventListener('touchstart', continueHandler, { once: true });
