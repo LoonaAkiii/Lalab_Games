@@ -14,7 +14,7 @@ const cardImages = [
   { src: 'icecream_bubu.mp4', match: 'icecream_dudu.mp4' },
   { src: 'icecream_dudu.mp4', match: 'icecream_bubu.mp4' },
   { src: 'work_bubu.mp4', match: 'work_dudu.mp4' },
-  { src: 'work_dudu.mp4', match: 'work_bubu.mp4' },
+  { src: 'work_dudu.mp4', match: 'work_bubu.mp4' }
 ];
 let firstCard = null;
 let secondCard = null;
@@ -64,9 +64,7 @@ function flipCard() {
   video.classList.remove('hidden');
   video.currentTime = 0;
   const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {});
-  }
+  if (playPromise !== undefined) playPromise.catch(() => {});
   this.dataset.status = 'flipped';
   this.classList.add('flipped');
   if (!firstCard) {
@@ -149,6 +147,7 @@ function handleNoButtonClick() {
 }
 document.getElementById('noButton').addEventListener('click', handleNoButtonClick);
 document.getElementById('exit-button').addEventListener('click', () => {
+  sessionStorage.removeItem('memoryGameLoaded');
   window.location.href = "../index.html";
 });
 document.getElementById('letterButton').addEventListener('click', () => {
@@ -176,34 +175,54 @@ function initGame() {
     board.appendChild(card);
   });
 }
-initGame();
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.getElementById('bg-music');
   const hasConfirmed = localStorage.getItem('musicConfirmed');
   const tryPlayMusic = () => {
-    if (music && music.paused) {
-      music.play().catch(() => {});
-    }
+    if (music && music.paused) music.play().catch(() => {});
   };
-  if (hasConfirmed) {
-    tryPlayMusic();
+  const fromHub = document.referrer.includes('index.html');
+  const alreadyLoaded = sessionStorage.getItem('memoryGameLoaded');
+  const loadingScreen = document.getElementById('loading-screen');
+  const tapText = document.querySelector('.tap-text');
+  if (fromHub && !alreadyLoaded && loadingScreen && tapText) {
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      tapText.style.display = 'block';
+      const continueHandler = () => {
+        loadingScreen.style.display = 'none';
+        document.body.style.overflow = '';
+        sessionStorage.setItem('memoryGameLoaded', 'true');
+        if (hasConfirmed) {
+          tryPlayMusic();
+        } else {
+          music.play().then(() => {
+            localStorage.setItem('musicConfirmed', 'yes');
+          }).catch(() => {});
+        }
+        window.removeEventListener('click', continueHandler);
+        window.removeEventListener('touchstart', continueHandler);
+      };
+      window.addEventListener('click', continueHandler);
+      window.addEventListener('touchstart', continueHandler);
+    }, 3000);
   } else {
-    const enableMusic = () => {
-      music.play().then(() => {
-        localStorage.setItem('musicConfirmed', 'yes');
-      }).catch(() => {});
-      window.removeEventListener('click', enableMusic);
-      window.removeEventListener('touchstart', enableMusic);
-      window.removeEventListener('scroll', enableMusic);
-    };
-    window.addEventListener('click', enableMusic, { once: true });
-    window.addEventListener('touchstart', enableMusic, { once: true });
-    window.addEventListener('scroll', enableMusic, { once: true });
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    if (hasConfirmed) {
+      tryPlayMusic();
+    } else {
+      const enableMusic = () => {
+        music.play().then(() => {
+          localStorage.setItem('musicConfirmed', 'yes');
+        }).catch(() => {});
+        window.removeEventListener('click', enableMusic);
+        window.removeEventListener('touchstart', enableMusic);
+        window.removeEventListener('scroll', enableMusic);
+      };
+      window.addEventListener('click', enableMusic, { once: true });
+      window.addEventListener('touchstart', enableMusic, { once: true });
+      window.addEventListener('scroll', enableMusic, { once: true });
+    }
   }
-  const resumeOnUserInteraction = () => {
-    tryPlayMusic();
-  };
-  window.addEventListener('click', resumeOnUserInteraction);
-  window.addEventListener('touchstart', resumeOnUserInteraction);
-  window.addEventListener('scroll', resumeOnUserInteraction);
+  initGame();
 });
