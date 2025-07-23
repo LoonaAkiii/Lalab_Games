@@ -3,12 +3,9 @@ const input = document.getElementById('commandInput');
 const exitBtn = document.getElementById('exit-button');
 const notif = document.getElementById('notification');
 const flowerContainer = document.querySelector('.rose-container');
-
-input.addEventListener('touchend', () => {
-  requestAnimationFrame(() => {
-    input.focus();
-  });
-});
+const music = document.getElementById('bg-music');
+const loadingScreen = document.getElementById('loading-screen');
+const tapText = document.querySelector('.tap-text');
 
 const flowerMessages = [
   `Nyeheheee flowers for bubu!!🌸 >:33`,
@@ -22,6 +19,7 @@ const bantotMessages = [
   `Hanyaaa!! >:UU`,
   `Wala to guyss >:UU`
 ];
+
 let isAnimating = false;
 
 function getRandomColor() {
@@ -106,15 +104,19 @@ exitBtn.addEventListener('click', () => {
   window.location.href = "../index.html";
 });
 
-flowerContainer.classList.add('hidden');
-
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.getElementById('bg-music');
   const loadingScreen = document.getElementById('loading-screen');
   const tapText = document.querySelector('.tap-text');
+  const input = document.getElementById('commandInput');
+  const btn = document.getElementById('drawBtn');
+  const exitBtn = document.getElementById('exit-button');
+
   const hasConfirmed = localStorage.getItem('musicConfirmed');
   const alreadyLoaded = sessionStorage.getItem('digitalflower');
   const fromHub = document.referrer.includes('index.html');
+
+  let isGameActive = false;
 
   const tryPlayMusic = () => {
     if (music && music.paused) {
@@ -136,25 +138,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const cleanup = () => {
     loadingScreen.style.display = 'none';
-    document.getElementById('exit-button').classList.remove('hidden');
+    exitBtn.classList.remove('hidden');
     sessionStorage.setItem('digitalflower', 'true');
+  };
+
+  const handleStartGame = () => {
+    if (isGameActive) return;
+    isGameActive = true;
+    disableAllControls();
+    cleanup();
+    setTimeout(() => {
+      enableAllControls();
+      tryPlayMusic();
+      requestAnimationFrame(() => {
+        input.focus();
+      });
+    }, 500);
   };
 
   if (fromHub && !alreadyLoaded) {
     disableAllControls();
     setTimeout(() => {
       tapText.style.display = 'block';
-      const continueHandler = () => {
-        window.removeEventListener('click', continueHandler);
-        window.removeEventListener('touchstart', continueHandler);
-        cleanup();
-        setTimeout(() => {
-          enableAllControls();
-          tryPlayMusic();
-        }, 500);
-      };
-      window.addEventListener('click', continueHandler, { once: true });
-      window.addEventListener('touchstart', continueHandler, { once: true });
+      window.addEventListener('touchend', handleStartGame, { once: true });
+      window.addEventListener('click', handleStartGame, { once: true });
     }, 3000);
   } else {
     cleanup();

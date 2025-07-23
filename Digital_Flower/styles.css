@@ -19,8 +19,8 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 input[type="text"] {
-  -webkit-user-select: text;
-  -ms-user-select: text;
+  -webkit-user-select: text !important;
+  -ms-user-select: text !important;
   user-select: text;
 }
 h2, p {
