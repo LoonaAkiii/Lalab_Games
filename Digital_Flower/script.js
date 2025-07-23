@@ -1,5 +1,6 @@
 const btn = document.getElementById('drawBtn');
 const input = document.getElementById('commandInput');
+input.addEventListener('touchend', () => {input.focus();});
 const notif = document.getElementById('notification');
 const flowerContainer = document.querySelector('.rose-container');
 const flowerMessages = [
