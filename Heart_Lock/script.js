@@ -69,6 +69,18 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       tapText.style.display = 'block';
       const handleTapToContinue = () => {
+        const blocker = document.createElement('div');
+        blocker.style.position = 'fixed';
+        blocker.style.top = '0';
+        blocker.style.left = '0';
+        blocker.style.width = '100%';
+        blocker.style.height = '100%';
+        blocker.style.zIndex = '9999';
+        blocker.style.background = 'transparent';
+        document.body.appendChild(blocker);
+        setTimeout(() => {
+          blocker.remove();
+        }, 500);
         loadingScreen.style.display = 'none';
         document.body.style.overflow = '';
         sessionStorage.setItem('gameLoadedOnce', 'true');
