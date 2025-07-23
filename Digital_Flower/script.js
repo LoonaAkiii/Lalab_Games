@@ -105,18 +105,9 @@ exitBtn.addEventListener('click', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const music = document.getElementById('bg-music');
-  const loadingScreen = document.getElementById('loading-screen');
-  const tapText = document.querySelector('.tap-text');
-  const input = document.getElementById('commandInput');
-  const btn = document.getElementById('drawBtn');
-  const exitBtn = document.getElementById('exit-button');
-
   const hasConfirmed = localStorage.getItem('musicConfirmed');
   const alreadyLoaded = sessionStorage.getItem('digitalflower');
   const fromHub = document.referrer.includes('index.html');
-
-  let isGameActive = false;
 
   const tryPlayMusic = () => {
     if (music && music.paused) {
@@ -124,13 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const disableAllControls = () => {
+  const disableControls = () => {
     btn.disabled = true;
     input.disabled = true;
     exitBtn.disabled = true;
   };
 
-  const enableAllControls = () => {
+  const enableControls = () => {
     btn.disabled = false;
     input.disabled = false;
     exitBtn.disabled = false;
@@ -142,30 +133,22 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionStorage.setItem('digitalflower', 'true');
   };
 
-  const handleStartGame = () => {
-    if (isGameActive) return;
-    isGameActive = true;
-    disableAllControls();
+  const handleTap = () => {
+    tapText.style.display = 'none';
     cleanup();
     setTimeout(() => {
-      enableAllControls();
+      enableControls();
       tryPlayMusic();
-      requestAnimationFrame(() => {
-        input.focus();
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          input.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        }, 200);
-      });
-    }, 500);
+      // Do not call input.focus() here to avoid iOS keyboard issue
+    }, 300);
   };
 
   if (fromHub && !alreadyLoaded) {
-    disableAllControls();
+    disableControls();
     setTimeout(() => {
       tapText.style.display = 'block';
-      window.addEventListener('touchend', handleStartGame, { once: true, passive: true });
-      window.addEventListener('click', handleStartGame, { once: true, passive: true });
+      tapText.addEventListener('click', handleTap, { once: true });
+      tapText.addEventListener('touchstart', handleTap, { once: true });
     }, 3000);
   } else {
     cleanup();
