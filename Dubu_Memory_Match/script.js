@@ -190,16 +190,18 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       tapText.style.display = 'block';
       const continueHandler = () => {
-        loadingScreen.style.display = 'none';
-        document.body.style.overflow = '';
-        sessionStorage.setItem('memoryGameLoaded', 'true');
-        if (hasConfirmed) {
-          tryPlayMusic();
-        } else {
-          music.play().then(() => {
-            localStorage.setItem('musicConfirmed', 'yes');
-          }).catch(() => {});
-        }
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+          document.body.style.overflow = '';
+          sessionStorage.setItem('memoryGameLoaded', 'true');
+          if (hasConfirmed) {
+            tryPlayMusic();
+          } else {
+            music.play().then(() => {
+              localStorage.setItem('musicConfirmed', 'yes');
+            }).catch(() => {});
+          }
+        }, 200);
         window.removeEventListener('click', continueHandler);
         window.removeEventListener('touchstart', continueHandler);
       };
