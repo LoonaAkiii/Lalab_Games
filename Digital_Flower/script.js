@@ -1,12 +1,8 @@
 const btn = document.getElementById('drawBtn');
 const input = document.getElementById('commandInput');
-input.addEventListener('touchend', () => {
-  setTimeout(() => {
-    input.focus();
-  }, 50);
-});
 const notif = document.getElementById('notification');
 const flowerContainer = document.querySelector('.rose-container');
+const exitButton = document.getElementById('exit-button');
 const flowerMessages = [
   `Nyeheheee flowers for bubu!!🌸 >:33`,
   `Fabooty flowerss!! >:DD`,
@@ -20,6 +16,11 @@ const bantotMessages = [
   `Wala to guyss >:UU`
 ];
 let isAnimating = false;
+input.addEventListener('touchend', () => {
+  requestAnimationFrame(() => {
+    input.focus();
+  });
+});
 function getRandomColor() {
   const letters = '0123456789ABCDEF';
   let color = '#';
@@ -97,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const hasConfirmed = localStorage.getItem('musicConfirmed');
   const alreadyLoaded = sessionStorage.getItem('digitalflower');
   const fromHub = document.referrer.includes('index.html');
-
   const blocker = document.createElement('div');
   blocker.style.position = 'fixed';
   blocker.style.top = '0';
@@ -105,23 +105,30 @@ document.addEventListener('DOMContentLoaded', () => {
   blocker.style.width = '100%';
   blocker.style.height = '100%';
   blocker.style.zIndex = '9999';
-  blocker.style.backgroundColor = 'transparent';
-  blocker.style.touchAction = 'none';
+  blocker.style.background = 'transparent';
+  blocker.style.pointerEvents = 'auto';
+  blocker.id = 'blocker-overlay';
   document.body.appendChild(blocker);
-
+  btn.disabled = true;
+  input.disabled = true;
+  exitButton.disabled = true;
   const tryPlayMusic = () => {
     if (music && music.paused) {
       music.play().catch(() => {});
     }
   };
-
   const cleanup = () => {
-    if (loadingScreen) loadingScreen.style.display = 'none';
+    loadingScreen.style.display = 'none';
     document.getElementById('exit-button').classList.remove('hidden');
     sessionStorage.setItem('digitalflower', 'true');
-    blocker.remove();
+    const blockerEl = document.getElementById('blocker-overlay');
+    if (blockerEl) blockerEl.remove();
+    setTimeout(() => {
+      btn.disabled = false;
+      input.disabled = false;
+      exitButton.disabled = false;
+    }, 300);
   };
-
   if (fromHub && !alreadyLoaded) {
     setTimeout(() => {
       tapText.style.display = 'block';
