@@ -40,6 +40,7 @@ function lockAgain() {
   }
 }
 function exitGame() {
+  sessionStorage.removeItem('gameLoadedOnce');
   window.location.href = "../index.html";
 }
 document.addEventListener('gesturestart', e => e.preventDefault());
@@ -54,30 +55,61 @@ window.addEventListener('resize', resizeCanvas);
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.getElementById('bg-music');
   const hasConfirmed = localStorage.getItem('musicConfirmed');
+  const loadingScreen = document.getElementById('loading-screen');
+  const tapText = document.querySelector('.tap-text');
+  const fromHub = document.referrer.includes('index.html');
+  const alreadyLoaded = sessionStorage.getItem('gameLoadedOnce');
   const tryPlayMusic = () => {
     if (music && music.paused) {
       music.play().catch(() => {});
     }
   };
-  if (hasConfirmed) {
-    tryPlayMusic();
+  if (fromHub && !alreadyLoaded && loadingScreen && tapText) {
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      tapText.style.display = 'block';
+      const handleTapToContinue = () => {
+        loadingScreen.style.display = 'none';
+        document.body.style.overflow = '';
+        sessionStorage.setItem('gameLoadedOnce', 'true');
+        if (!hasConfirmed) {
+          music.play().then(() => {
+            localStorage.setItem('musicConfirmed', 'yes');
+          }).catch(() => {});
+        } else {
+          tryPlayMusic();
+        }
+        window.removeEventListener('click', handleTapToContinue);
+        window.removeEventListener('touchstart', handleTapToContinue);
+        window.addEventListener('click', tryPlayMusic);
+        window.addEventListener('touchstart', tryPlayMusic);
+        window.addEventListener('scroll', tryPlayMusic);
+      };
+      window.addEventListener('click', handleTapToContinue);
+      window.addEventListener('touchstart', handleTapToContinue);
+    }, 3000);
   } else {
-    const enableMusic = () => {
-      music.play().then(() => {
-        localStorage.setItem('musicConfirmed', 'yes');
-      }).catch(() => {});
-      window.removeEventListener('click', enableMusic);
-      window.removeEventListener('touchstart', enableMusic);
-      window.removeEventListener('scroll', enableMusic);
-    };
-    window.addEventListener('click', enableMusic, { once: true });
-    window.addEventListener('touchstart', enableMusic, { once: true });
-    window.addEventListener('scroll', enableMusic, { once: true });
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    if (hasConfirmed) {
+      tryPlayMusic();
+      window.addEventListener('click', tryPlayMusic);
+      window.addEventListener('touchstart', tryPlayMusic);
+      window.addEventListener('scroll', tryPlayMusic);
+    } else {
+      const enableMusic = () => {
+        music.play().then(() => {
+          localStorage.setItem('musicConfirmed', 'yes');
+        }).catch(() => {});
+        window.removeEventListener('click', enableMusic);
+        window.removeEventListener('touchstart', enableMusic);
+        window.removeEventListener('scroll', enableMusic);
+        window.addEventListener('click', tryPlayMusic);
+        window.addEventListener('touchstart', tryPlayMusic);
+        window.addEventListener('scroll', tryPlayMusic);
+      };
+      window.addEventListener('click', enableMusic, { once: true });
+      window.addEventListener('touchstart', enableMusic, { once: true });
+      window.addEventListener('scroll', enableMusic, { once: true });
+    }
   }
-  const resumeOnUserInteraction = () => {
-    tryPlayMusic();
-  };
-  window.addEventListener('click', resumeOnUserInteraction);
-  window.addEventListener('touchstart', resumeOnUserInteraction);
-  window.addEventListener('scroll', resumeOnUserInteraction);
 });
