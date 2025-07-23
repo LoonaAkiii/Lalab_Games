@@ -97,18 +97,23 @@ document.addEventListener('DOMContentLoaded', () => {
       music.play().catch(() => {});
     }
   };
-  if (fromHub && !alreadyLoaded && loadingScreen && tapText) {
-    document.body.style.overflow = 'hidden';
+  const cleanup = () => {
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    document.getElementById('exit-button').classList.remove('hidden');
+    sessionStorage.setItem('digitalflower', 'true');
+  };
+  if (fromHub && !alreadyLoaded) {
     setTimeout(() => {
       tapText.style.display = 'block';
-      const continueHandler = () => {
-        loadingScreen.style.display = 'none';
-        document.getElementById('exit-button').classList.remove('hidden');
-        document.body.style.overflow = '';
-        sessionStorage.setItem('digitalflower', 'true');
-        localStorage.setItem('musicConfirmed', 'yes');
+      const continueHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         window.removeEventListener('click', continueHandler);
         window.removeEventListener('touchstart', continueHandler);
+        cleanup();
+        setTimeout(() => {
+          tryPlayMusic();
+        }, 300);
         const blocker = document.createElement('div');
         blocker.style.position = 'fixed';
         blocker.style.top = '0';
@@ -119,36 +124,25 @@ document.addEventListener('DOMContentLoaded', () => {
         blocker.style.background = 'transparent';
         document.body.appendChild(blocker);
         setTimeout(() => {
-          document.body.removeChild(blocker);
-        }, 300);
-        tryPlayMusic();
+          blocker.remove();
+        }, 500);
       };
-      window.addEventListener('click', continueHandler);
-      window.addEventListener('touchstart', continueHandler);
+      window.addEventListener('click', continueHandler, { once: true });
+      window.addEventListener('touchstart', continueHandler, { once: true });
     }, 3000);
-    return;
   } else {
-    if (loadingScreen) loadingScreen.style.display = 'none';
-  }
-  if (hasConfirmed) {
-    tryPlayMusic();
-  } else {
-    const enableMusic = () => {
-      music.play().then(() => {
+    cleanup();
+    if (hasConfirmed) {
+      tryPlayMusic();
+    } else {
+      const enableMusic = () => {
+        tryPlayMusic();
         localStorage.setItem('musicConfirmed', 'yes');
-      }).catch(() => {});
-      window.removeEventListener('click', enableMusic);
-      window.removeEventListener('touchstart', enableMusic);
-      window.removeEventListener('scroll', enableMusic);
-    };
-    window.addEventListener('click', enableMusic, { once: true });
-    window.addEventListener('touchstart', enableMusic, { once: true });
-    window.addEventListener('scroll', enableMusic, { once: true });
+        window.removeEventListener('click', enableMusic);
+        window.removeEventListener('touchstart', enableMusic);
+      };
+      window.addEventListener('click', enableMusic, { once: true });
+      window.addEventListener('touchstart', enableMusic, { once: true });
+    }
   }
-  const resumeOnUserInteraction = () => {
-    tryPlayMusic();
-  };
-  window.addEventListener('click', resumeOnUserInteraction);
-  window.addEventListener('touchstart', resumeOnUserInteraction);
-  window.addEventListener('scroll', resumeOnUserInteraction);
 });
