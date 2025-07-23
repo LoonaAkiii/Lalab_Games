@@ -39,8 +39,8 @@ function resetGame() {
   noClickCount = 0;
   goTo('index');
 }
-
 function exitGame() {
+  sessionStorage.removeItem('valentineLoaded'); // Reset so loading screen shows again
   window.location.href = "../index.html";
 }
 
