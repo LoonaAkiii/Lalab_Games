@@ -58,17 +58,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = 'hidden';
     setTimeout(() => {
       tapText.style.display = 'block';
-      const continueHandler = () => {
-        loadingScreen.style.display = 'none';
-        document.body.style.overflow = '';
-        sessionStorage.setItem('valentineLoaded', 'true');
-        tryPlayMusic();
-        localStorage.setItem('musicConfirmed', 'yes');
-        window.removeEventListener('click', continueHandler);
-        window.removeEventListener('touchstart', continueHandler);
+      const continueHandler = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+          document.body.style.overflow = '';
+          sessionStorage.setItem('valentineLoaded', 'true');
+          tryPlayMusic();
+          localStorage.setItem('musicConfirmed', 'yes');
+        }, 50);
+        window.removeEventListener('click', continueHandler, { passive: false });
+        window.removeEventListener('touchstart', continueHandler, { passive: false });
       };
-      window.addEventListener('click', continueHandler);
-      window.addEventListener('touchstart', continueHandler);
+      window.addEventListener('click', continueHandler, { passive: false });
+      window.addEventListener('touchstart', continueHandler, { passive: false });
     }, 3000);
   } else {
     if (loadingScreen) loadingScreen.style.display = 'none';
