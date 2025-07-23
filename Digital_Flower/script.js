@@ -82,6 +82,7 @@ btn.addEventListener('click', async () => {
   isAnimating = true;
   btn.disabled = true;
   input.disabled = true;
+  exitBtn.disabled = true;
 
   if (matches) {
     const color = getRandomColor();
@@ -97,6 +98,7 @@ btn.addEventListener('click', async () => {
   isAnimating = false;
   btn.disabled = false;
   input.disabled = false;
+  exitBtn.disabled = false;
 });
 
 exitBtn.addEventListener('click', () => {
@@ -113,19 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const hasConfirmed = localStorage.getItem('musicConfirmed');
   const alreadyLoaded = sessionStorage.getItem('digitalflower');
   const fromHub = document.referrer.includes('index.html');
-
-  const blocker = document.createElement('div');
-  blocker.style.position = 'fixed';
-  blocker.style.top = '0';
-  blocker.style.left = '0';
-  blocker.style.width = '100%';
-  blocker.style.height = '100%';
-  blocker.style.zIndex = '9999';
-  blocker.style.background = 'rgba(0,0,0,0)';
-  blocker.style.pointerEvents = 'auto';
-  blocker.style.touchAction = 'none';
-  blocker.id = 'blocker-overlay';
-  document.body.appendChild(blocker);
 
   const tryPlayMusic = () => {
     if (music && music.paused) {
@@ -147,29 +136,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const cleanup = () => {
     loadingScreen.style.display = 'none';
-    const blockerEl = document.getElementById('blocker-overlay');
-    if (blockerEl) blockerEl.remove();
     document.getElementById('exit-button').classList.remove('hidden');
     sessionStorage.setItem('digitalflower', 'true');
   };
 
   if (fromHub && !alreadyLoaded) {
+    disableAllControls();
     setTimeout(() => {
       tapText.style.display = 'block';
-      const continueHandler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+      const continueHandler = () => {
         window.removeEventListener('click', continueHandler);
         window.removeEventListener('touchstart', continueHandler);
-
-        // Immediately disable buttons to prevent exit spam
-        disableAllControls();
         cleanup();
-
         setTimeout(() => {
           enableAllControls();
           tryPlayMusic();
-        }, 2500); // Prevent accidental button taps
+        }, 500);
       };
       window.addEventListener('click', continueHandler, { once: true });
       window.addEventListener('touchstart', continueHandler, { once: true });
