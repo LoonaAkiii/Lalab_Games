@@ -257,35 +257,70 @@ document.getElementById("time-travel-back").addEventListener('click', resetGame)
 document.getElementById("play-again").addEventListener('click', resetToMainScreen);
 document.getElementById("guess-input").addEventListener('keydown', handleKeyPress);
 document.getElementById("exit-game").addEventListener('click', () => {
+  sessionStorage.removeItem('gameLoadedOnce');
   window.location.href = "../index.html";
 });
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.getElementById('bg-music');
   const hasConfirmed = localStorage.getItem('musicConfirmed');
+  const fromHub = document.referrer.includes('index.html');
+  const alreadyLoaded = sessionStorage.getItem('gameLoadedOnce');
+  const loadingScreen = document.getElementById('loading-screen');
+  const tapText = document.querySelector('.tap-text');
   const tryPlayMusic = () => {
     if (music && music.paused) {
       music.play().catch(() => {});
     }
   };
-  if (hasConfirmed) {
-    tryPlayMusic();
-  } else {
-    const enableMusic = () => {
-      music.play().then(() => {
-        localStorage.setItem('musicConfirmed', 'yes');
-      }).catch(() => {});
-      window.removeEventListener('click', enableMusic);
-      window.removeEventListener('touchstart', enableMusic);
-      window.removeEventListener('scroll', enableMusic);
-    };
-    window.addEventListener('click', enableMusic, { once: true });
-    window.addEventListener('touchstart', enableMusic, { once: true });
-    window.addEventListener('scroll', enableMusic, { once: true });
-  }
-  const resumeOnUserInteraction = () => {
-    tryPlayMusic();
+  const enableMusic = () => {
+    music.play().then(() => {
+      localStorage.setItem('musicConfirmed', 'yes');
+    }).catch(() => {});
+    window.removeEventListener('click', enableMusic);
+    window.removeEventListener('touchstart', enableMusic);
+    window.removeEventListener('scroll', enableMusic);
   };
-  window.addEventListener('click', resumeOnUserInteraction);
-  window.addEventListener('touchstart', resumeOnUserInteraction);
-  window.addEventListener('scroll', resumeOnUserInteraction);
+  if (fromHub && !alreadyLoaded && loadingScreen && tapText) {
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      tapText.style.display = 'block';
+      const continueHandler = () => {
+        loadingScreen.style.display = 'none';
+        document.body.style.overflow = '';
+        sessionStorage.setItem('gameLoadedOnce', 'true');
+        if (hasConfirmed) {
+          tryPlayMusic();
+        } else {
+          window.addEventListener('click', enableMusic, { once: true });
+          window.addEventListener('touchstart', enableMusic, { once: true });
+          window.addEventListener('scroll', enableMusic, { once: true });
+        }
+        const resumeOnUserInteraction = () => {
+          tryPlayMusic();
+        };
+        window.addEventListener('click', resumeOnUserInteraction);
+        window.addEventListener('touchstart', resumeOnUserInteraction);
+        window.addEventListener('scroll', resumeOnUserInteraction);
+        window.removeEventListener('click', continueHandler);
+        window.removeEventListener('touchstart', continueHandler);
+      };
+      window.addEventListener('click', continueHandler);
+      window.addEventListener('touchstart', continueHandler);
+    }, 3000);
+  } else {
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    if (hasConfirmed) {
+      tryPlayMusic();
+    } else {
+      window.addEventListener('click', enableMusic, { once: true });
+      window.addEventListener('touchstart', enableMusic, { once: true });
+      window.addEventListener('scroll', enableMusic, { once: true });
+    }
+    const resumeOnUserInteraction = () => {
+      tryPlayMusic();
+    };
+    window.addEventListener('click', resumeOnUserInteraction);
+    window.addEventListener('touchstart', resumeOnUserInteraction);
+    window.addEventListener('scroll', resumeOnUserInteraction);
+  }
 });
