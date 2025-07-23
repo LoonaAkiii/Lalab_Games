@@ -18,6 +18,11 @@ body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
+input[type="text"] {
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
 h2, p {
   text-align: center;
   color: #a20060;
