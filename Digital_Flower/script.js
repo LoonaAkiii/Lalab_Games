@@ -152,6 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
       tryPlayMusic();
       requestAnimationFrame(() => {
         input.focus();
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          input.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }, 200);
       });
     }, 500);
   };
@@ -160,8 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
     disableAllControls();
     setTimeout(() => {
       tapText.style.display = 'block';
-      window.addEventListener('touchend', handleStartGame, { once: true });
-      window.addEventListener('click', handleStartGame, { once: true });
+      window.addEventListener('touchend', handleStartGame, { once: true, passive: true });
+      window.addEventListener('click', handleStartGame, { once: true, passive: true });
     }, 3000);
   } else {
     cleanup();
