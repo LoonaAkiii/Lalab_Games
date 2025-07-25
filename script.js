@@ -1,45 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.getElementById('bg-music');
   const loadingScreen = document.createElement('div');
-  const icon = document.createElement('span');
+  const iconWrapper = document.createElement('div');
+  const icon = document.createElement('img');
   const tapText = document.createElement('div');
+  const textSpacer = document.createElement('div');
   loadingScreen.id = 'loading-screen';
-  loadingScreen.style.position = 'fixed';
-  loadingScreen.style.top = '0';
-  loadingScreen.style.left = '0';
-  loadingScreen.style.width = '100vw';
-  loadingScreen.style.height = '100vh';
-  loadingScreen.style.background = 'linear-gradient(to bottom right, #ffe6f0, #ffd6ec)';
-  loadingScreen.style.display = 'flex';
-  loadingScreen.style.flexDirection = 'column';
-  loadingScreen.style.alignItems = 'center';
-  loadingScreen.style.justifyContent = 'center';
-  loadingScreen.style.zIndex = '9999';
-  icon.className = 'material-symbols-outlined';
-  icon.textContent = 'joystick';
-  icon.style.fontSize = '64px';
-  icon.style.color = '#a20060';
-  icon.style.animation = 'bounceClick 1.2s infinite ease-in-out';
+  Object.assign(loadingScreen.style, {
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100vw',
+    height: '100vh',
+    background: '#ffb5c9',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: '9999'
+  });
+  iconWrapper.style.display = 'flex';
+  iconWrapper.style.alignItems = 'center';
+  iconWrapper.style.justifyContent = 'center';
+  iconWrapper.style.animation = 'shrinkThenBounceSize 2.5s ease forwards';
+  icon.src = 'icon-512.png';
+  icon.id = 'loading-icon';
+  Object.assign(icon.style, {
+    objectFit: 'contain',
+    width: '120px',
+    height: '120px'
+  });
   tapText.className = 'tap-text';
-  tapText.textContent = 'Touch to continue...';
+  tapText.textContent = 'Tap to continue...';
   tapText.style.color = '#a20060';
   tapText.style.fontSize = '1.2rem';
-  tapText.style.marginTop = '1rem';
   tapText.style.display = 'none';
-  loadingScreen.appendChild(icon);
-  loadingScreen.appendChild(tapText);
+  textSpacer.style.height = '2rem';
+  textSpacer.style.display = 'flex';
+  textSpacer.style.alignItems = 'center';
+  textSpacer.style.justifyContent = 'center';
+  textSpacer.appendChild(tapText);
+  iconWrapper.appendChild(icon);
+  loadingScreen.appendChild(iconWrapper);
+  loadingScreen.appendChild(textSpacer);
   document.body.appendChild(loadingScreen);
   document.body.style.overflow = 'hidden';
   function tryPlayMusic() {
-    if (music && music.paused) {
-      music.play().catch(() => {});
-    }
+    if (music && music.paused) music.play().catch(() => {});
   }
   setTimeout(() => {
+    icon.classList.add('bounce');
     tapText.style.display = 'block';
-    const handleFirstTap = (event) => {
-      event.preventDefault();
-      event.stopPropagation();
+    tapText.classList.add('tap-text');
+    setTimeout(() => {
+      tapText.classList.add('loop');
+    }, 800);
+    const handleFirstTap = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      loadingScreen.classList.add('exit');
       setTimeout(() => {
         loadingScreen.remove();
         document.body.style.overflow = '';
@@ -51,13 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           tryPlayMusic();
         }
-        const tryResumeMusic = () => {
-          tryPlayMusic();
-        };
+        const tryResumeMusic = () => tryPlayMusic();
         window.addEventListener('click', tryResumeMusic);
         window.addEventListener('touchstart', tryResumeMusic);
         window.addEventListener('scroll', tryResumeMusic);
-      }, 50);
+      }, 600);
       window.removeEventListener('click', handleFirstTap);
       window.removeEventListener('touchstart', handleFirstTap);
     };
