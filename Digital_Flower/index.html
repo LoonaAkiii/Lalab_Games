@@ -9,11 +9,16 @@
 </head>
 <body oncontextmenu="return false">
   <div id="loading-screen">
-    <div class="loading-text">Loading...</div>
+    <div class="progress-container">
+      <div class="progress-wrapper">
+        <div class="progress-bar" id="progress-fill"></div>
+      </div>
+      <img src="../loadingscreen.png" alt="loader icon" id="progress-icon">
+    </div>
     <div class="tap-text">Tap to continue...</div>
   </div>
   <audio id="bg-music" src="music.mp3" loop playsinline></audio>
-  <button id="exit-button" class="hidden">EXIT GAME</button>
+  <button id="exit-btn" class="hidden" onclick="exitGame()">EXIT GAME</button>
   <h2 style="margin-top: 60px;">🌸 Flower For Bubu</h2>
   <p><strong>Dudu:</strong> I have a gift for you >:33</p>
   <div class="controls">

@@ -1,12 +1,14 @@
 const btn = document.getElementById('drawBtn');
 const input = document.getElementById('commandInput');
-const exitBtn = document.getElementById('exit-button');
+const exitBtn = document.getElementById('exit-btn');
 const notif = document.getElementById('notification');
 const flowerContainer = document.querySelector('.rose-container');
 const music = document.getElementById('bg-music');
 const loadingScreen = document.getElementById('loading-screen');
 const tapText = document.querySelector('.tap-text');
-
+const progressFill = document.getElementById('progress-fill');
+const progressIcon = document.getElementById('progress-icon');
+const progressWrapper = document.querySelector('.progress-wrapper');
 const flowerMessages = [
   `Nyeheheee flowers for bubu!!🌸 >:33`,
   `Fabooty flowerss!! >:DD`,
@@ -19,16 +21,13 @@ const bantotMessages = [
   `Hanyaaa!! >:UU`,
   `Wala to guyss >:UU`
 ];
-
 let isAnimating = false;
-
 function getRandomColor() {
   const letters = '0123456789ABCDEF';
   let color = '#';
   for (let i = 0; i < 6; i++) color += letters[Math.floor(Math.random() * 16)];
   return color;
 }
-
 function showNotification(message, isError = false) {
   return new Promise((resolve) => {
     notif.textContent = message;
@@ -42,11 +41,9 @@ function showNotification(message, isError = false) {
     }, 2000);
   });
 }
-
 function cleanInput(text) {
   return text.toLowerCase().replace(/[.,!?]/g, '').trim();
 }
-
 function colorizeRose(color) {
   document.querySelectorAll('.petal').forEach((petal, i) => {
     if (i === 2 || i === 3) {
@@ -56,7 +53,6 @@ function colorizeRose(color) {
     }
   });
 }
-
 function darkenColor(hex, percent) {
   const num = parseInt(hex.replace('#', ''), 16);
   const amt = Math.round(2.55 * percent);
@@ -65,23 +61,19 @@ function darkenColor(hex, percent) {
   const B = (num & 0x0000FF) - amt;
   return `#${(0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1)}`;
 }
-
 btn.addEventListener('click', async () => {
   if (isAnimating) return;
   btn.classList.remove('bounce');
   void btn.offsetWidth;
   btn.classList.add('bounce');
-
   const raw = input.value;
   const cleaned = cleanInput(raw);
-  const triggers = ['hello','hi','how are you','what','bantot','fabooty','cutie','buttcrack','dudu','thank you','wala','ano'];
+  const triggers = ['hello', 'hi', 'how are you', 'what', 'bantot', 'fabooty', 'cutie', 'buttcrack', 'dudu', 'thank you', 'wala', 'ano'];
   const matches = triggers.some(trigger => cleaned.includes(trigger));
-
   isAnimating = true;
   btn.disabled = true;
   input.disabled = true;
   exitBtn.disabled = true;
-
   if (matches) {
     const color = getRandomColor();
     const message = flowerMessages[Math.floor(Math.random() * flowerMessages.length)];
@@ -92,77 +84,89 @@ btn.addEventListener('click', async () => {
     const errorMessage = bantotMessages[Math.floor(Math.random() * bantotMessages.length)];
     await showNotification(errorMessage, true);
   }
-
   isAnimating = false;
   btn.disabled = false;
   input.disabled = false;
   exitBtn.disabled = false;
 });
-
 exitBtn.addEventListener('click', () => {
   sessionStorage.removeItem('digitalflower');
   window.location.href = "../index.html";
 });
-
 document.addEventListener('DOMContentLoaded', () => {
   const hasConfirmed = localStorage.getItem('musicConfirmed');
   const alreadyLoaded = sessionStorage.getItem('digitalflower');
-  const fromHub = document.referrer.includes('index.html');
-
   const tryPlayMusic = () => {
     if (music && music.paused) {
       music.play().catch(() => {});
     }
   };
-
-  const disableControls = () => {
-    btn.disabled = true;
-    input.disabled = true;
-    exitBtn.disabled = true;
+  const easeInOutSine = t => -(Math.cos(Math.PI * t) - 1) / 2;
+  const animateProgress = () => {
+    let progress = 0;
+    progressIcon.style.opacity = '1';
+    const iconWidth = progressIcon.offsetWidth;
+    const barWidth = progressWrapper.clientWidth;
+    const maxLeft = barWidth - iconWidth;
+    const step = () => {
+      if (progress < 100) {
+        progress += 1;
+        let delay = 30;
+        if (progress >= 40 && progress <= 75) delay = 15;
+        const eased = easeInOutSine(progress / 100);
+        progressFill.style.width = progress + '%';
+        progressIcon.style.left = (maxLeft * eased) + 'px';
+        setTimeout(step, delay);
+      } else {
+        progressFill.style.width = '100%';
+        progressIcon.style.left = (maxLeft + 20) + 'px';
+        setTimeout(() => {
+          tapText.classList.add('show');
+          setTimeout(() => {
+            tapText.classList.add('loop');
+            enableTap();
+          }, 800);
+        }, 300);
+      }
+    };
+    step();
   };
-
-  const enableControls = () => {
-    btn.disabled = false;
-    input.disabled = false;
-    exitBtn.disabled = false;
-  };
-
-  const cleanup = () => {
-    loadingScreen.style.display = 'none';
-    exitBtn.classList.remove('hidden');
-    sessionStorage.setItem('digitalflower', 'true');
-  };
-
-  const handleTap = () => {
-    tapText.style.display = 'none';
-    cleanup();
-    setTimeout(() => {
-      enableControls();
-      tryPlayMusic();
-      // Do not call input.focus() here to avoid iOS keyboard issue
-    }, 300);
-  };
-
-  if (fromHub && !alreadyLoaded) {
-    disableControls();
-    setTimeout(() => {
-      tapText.style.display = 'block';
-      tapText.addEventListener('click', handleTap, { once: true });
-      tapText.addEventListener('touchstart', handleTap, { once: true });
-    }, 3000);
-  } else {
-    cleanup();
-    if (hasConfirmed) {
-      tryPlayMusic();
-    } else {
-      const enableMusic = () => {
+  const enableTap = () => {
+    const continueHandler = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      loadingScreen.classList.add('exit');
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+        document.body.style.overflow = '';
+        sessionStorage.setItem('digitalflower', 'true');
         tryPlayMusic();
         localStorage.setItem('musicConfirmed', 'yes');
-        window.removeEventListener('click', enableMusic);
-        window.removeEventListener('touchstart', enableMusic);
-      };
+        exitBtn.classList.remove('hidden');
+      }, 600);
+      window.removeEventListener('click', continueHandler, { passive: false });
+      window.removeEventListener('touchstart', continueHandler, { passive: false });
+    };
+    window.addEventListener('click', continueHandler, { passive: false });
+    window.addEventListener('touchstart', continueHandler, { passive: false });
+  };
+  if (!alreadyLoaded && loadingScreen && tapText) {
+    document.body.style.overflow = 'hidden';
+    animateProgress();
+  } else {
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    exitBtn.classList.remove('hidden');
+    const enableMusic = () => {
+      tryPlayMusic();
+      localStorage.setItem('musicConfirmed', 'yes');
+      window.removeEventListener('click', enableMusic);
+      window.removeEventListener('touchstart', enableMusic);
+    };
+    if (!hasConfirmed) {
       window.addEventListener('click', enableMusic, { once: true });
       window.addEventListener('touchstart', enableMusic, { once: true });
+    } else {
+      tryPlayMusic();
     }
   }
 });
