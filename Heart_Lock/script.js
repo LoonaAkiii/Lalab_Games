@@ -55,73 +55,84 @@ window.addEventListener('resize', resizeCanvas);
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.getElementById('bg-music');
   const hasConfirmed = localStorage.getItem('musicConfirmed');
+  const alreadyLoaded = sessionStorage.getItem('gameLoadedOnce');
+  const fromHub = document.referrer.includes('index.html');
   const loadingScreen = document.getElementById('loading-screen');
   const tapText = document.querySelector('.tap-text');
-  const fromHub = document.referrer.includes('index.html');
-  const alreadyLoaded = sessionStorage.getItem('gameLoadedOnce');
+  const progressFill = document.getElementById('progress-fill');
+  const progressIcon = document.getElementById('progress-icon');
+  const progressWrapper = document.querySelector('.progress-wrapper');
+  const exitBtn = document.getElementById('exit-button');
   const tryPlayMusic = () => {
     if (music && music.paused) {
       music.play().catch(() => {});
     }
   };
-  if (fromHub && !alreadyLoaded && loadingScreen && tapText) {
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => {
-      tapText.style.display = 'block';
-      const handleTapToContinue = () => {
-        const blocker = document.createElement('div');
-        blocker.style.position = 'fixed';
-        blocker.style.top = '0';
-        blocker.style.left = '0';
-        blocker.style.width = '100%';
-        blocker.style.height = '100%';
-        blocker.style.zIndex = '9999';
-        blocker.style.background = 'transparent';
-        document.body.appendChild(blocker);
+  const easeInOutSine = t => -(Math.cos(Math.PI * t) - 1) / 2;
+  const animateProgress = () => {
+    let progress = 0;
+    progressIcon.style.opacity = '1';
+    const iconWidth = progressIcon.offsetWidth;
+    const barWidth = progressWrapper.clientWidth;
+    const maxLeft = barWidth - iconWidth;
+    const step = () => {
+      if (progress < 100) {
+        progress += 1;
+        const eased = easeInOutSine(progress / 100);
+        progressFill.style.width = progress + '%';
+        progressIcon.style.left = (maxLeft * eased) + 'px';
+        setTimeout(step, 30);
+      } else {
+        progressFill.style.width = '100%';
+        progressIcon.style.left = (maxLeft + 20) + 'px';
         setTimeout(() => {
-          blocker.remove();
-        }, 500);
+          tapText.classList.add('show');
+          setTimeout(() => {
+            tapText.classList.add('loop');
+            enableTap();
+          }, 800);
+        }, 300);
+      }
+    };
+    step();
+  };
+  const enableTap = () => {
+    const continueHandler = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      loadingScreen.classList.add('exit');
+      setTimeout(() => {
         loadingScreen.style.display = 'none';
         document.body.style.overflow = '';
         sessionStorage.setItem('gameLoadedOnce', 'true');
-        if (!hasConfirmed) {
-          music.play().then(() => {
-            localStorage.setItem('musicConfirmed', 'yes');
-          }).catch(() => {});
-        } else {
-          tryPlayMusic();
-        }
-        window.removeEventListener('click', handleTapToContinue);
-        window.removeEventListener('touchstart', handleTapToContinue);
-        window.addEventListener('click', tryPlayMusic);
-        window.addEventListener('touchstart', tryPlayMusic);
-        window.addEventListener('scroll', tryPlayMusic);
-      };
-      window.addEventListener('click', handleTapToContinue);
-      window.addEventListener('touchstart', handleTapToContinue);
-    }, 3000);
+        tryPlayMusic();
+        localStorage.setItem('musicConfirmed', 'yes');
+        if (exitBtn) exitBtn.style.display = 'block';
+      }, 600);
+      window.removeEventListener('click', continueHandler, { passive: false });
+      window.removeEventListener('touchstart', continueHandler, { passive: false });
+    };
+    window.addEventListener('click', continueHandler, { passive: false });
+    window.addEventListener('touchstart', continueHandler, { passive: false });
+  };
+  if (fromHub && !alreadyLoaded && loadingScreen && tapText) {
+    document.body.style.overflow = 'hidden';
+    if (exitBtn) exitBtn.style.display = 'none';
+    animateProgress();
   } else {
     if (loadingScreen) loadingScreen.style.display = 'none';
+    if (exitBtn) exitBtn.style.display = 'block';
     if (hasConfirmed) {
       tryPlayMusic();
-      window.addEventListener('click', tryPlayMusic);
-      window.addEventListener('touchstart', tryPlayMusic);
-      window.addEventListener('scroll', tryPlayMusic);
     } else {
       const enableMusic = () => {
-        music.play().then(() => {
-          localStorage.setItem('musicConfirmed', 'yes');
-        }).catch(() => {});
+        tryPlayMusic();
+        localStorage.setItem('musicConfirmed', 'yes');
         window.removeEventListener('click', enableMusic);
         window.removeEventListener('touchstart', enableMusic);
-        window.removeEventListener('scroll', enableMusic);
-        window.addEventListener('click', tryPlayMusic);
-        window.addEventListener('touchstart', tryPlayMusic);
-        window.addEventListener('scroll', tryPlayMusic);
       };
       window.addEventListener('click', enableMusic, { once: true });
       window.addEventListener('touchstart', enableMusic, { once: true });
-      window.addEventListener('scroll', enableMusic, { once: true });
     }
   }
 });
