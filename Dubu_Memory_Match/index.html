@@ -10,7 +10,12 @@
 </head>
 <body oncontextmenu="return false">
   <div id="loading-screen">
-    <div class="loading-text">Loading...</div>
+    <div class="progress-container">
+      <div class="progress-wrapper">
+        <div class="progress-bar" id="progress-fill"></div>
+      </div>
+      <img src="../loadingscreen.png" alt="loader icon" id="progress-icon">
+    </div>
     <div class="tap-text">Tap to continue...</div>
   </div>
   <audio id="bg-music" src="music.mp3" loop playsinline></audio>

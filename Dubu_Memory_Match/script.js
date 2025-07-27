@@ -16,10 +16,7 @@ const cardImages = [
   { src: 'work_bubu.mp4', match: 'work_dudu.mp4' },
   { src: 'work_dudu.mp4', match: 'work_bubu.mp4' }
 ];
-let firstCard = null;
-let secondCard = null;
-let matches = 0;
-let lockBoard = false;
+let firstCard = null, secondCard = null, matches = 0, lockBoard = false;
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -63,13 +60,11 @@ function flipCard() {
   img.classList.add('hidden');
   video.classList.remove('hidden');
   video.currentTime = 0;
-  const playPromise = video.play();
-  if (playPromise !== undefined) playPromise.catch(() => {});
+  video.play().catch(() => {});
   this.dataset.status = 'flipped';
   this.classList.add('flipped');
-  if (!firstCard) {
-    firstCard = this;
-  } else {
+  if (!firstCard) firstCard = this;
+  else {
     secondCard = this;
     lockBoard = true;
     checkForMatch();
@@ -77,11 +72,8 @@ function flipCard() {
 }
 function checkForMatch() {
   const isMatch = firstCard.dataset.match === secondCard.dataset.src;
-  if (isMatch) {
-    markAsMatched();
-  } else {
-    unflipCards();
-  }
+  if (isMatch) markAsMatched();
+  else unflipCards();
 }
 function markAsMatched() {
   [firstCard, secondCard].forEach(card => {
@@ -96,9 +88,7 @@ function markAsMatched() {
   });
   matches++;
   resetBoard();
-  if (matches === cardImages.length / 2) {
-    setTimeout(showWinDialog, 500);
-  }
+  if (matches === cardImages.length / 2) setTimeout(showWinDialog, 500);
 }
 function unflipCards() {
   setTimeout(() => {
@@ -178,45 +168,75 @@ function initGame() {
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.getElementById('bg-music');
   const hasConfirmed = localStorage.getItem('musicConfirmed');
-  const tryPlayMusic = () => {
-    if (music && music.paused) music.play().catch(() => {});
-  };
-  const fromHub = document.referrer.includes('index.html');
   const alreadyLoaded = sessionStorage.getItem('memoryGameLoaded');
   const loadingScreen = document.getElementById('loading-screen');
   const tapText = document.querySelector('.tap-text');
-  if (fromHub && !alreadyLoaded && loadingScreen && tapText) {
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => {
-      tapText.style.display = 'block';
-      const continueHandler = () => {
+  const progressFill = document.getElementById('progress-fill');
+  const progressIcon = document.getElementById('progress-icon');
+  const progressWrapper = document.querySelector('.progress-wrapper');
+  const exitBtn = document.getElementById('exit-button');
+  if (exitBtn) exitBtn.style.display = 'none';
+  const tryPlayMusic = () => {
+    if (music && music.paused) music.play().catch(() => {});
+  };
+  const easeInOutSine = t => -(Math.cos(Math.PI * t) - 1) / 2;
+  const animateProgress = () => {
+    let progress = 0;
+    progressIcon.style.opacity = '1';
+    const iconWidth = progressIcon.offsetWidth;
+    const barWidth = progressWrapper.clientWidth;
+    const maxLeft = barWidth - iconWidth;
+    const step = () => {
+      if (progress < 100) {
+        progress += 1;
+        const eased = easeInOutSine(progress / 100);
+        progressFill.style.width = progress + '%';
+        progressIcon.style.left = (maxLeft * eased) + 'px';
+        setTimeout(step, 30);
+      } else {
+        progressFill.style.width = '100%';
+        progressIcon.style.left = (maxLeft + 20) + 'px';
         setTimeout(() => {
-          loadingScreen.style.display = 'none';
-          document.body.style.overflow = '';
-          sessionStorage.setItem('memoryGameLoaded', 'true');
-          if (hasConfirmed) {
-            tryPlayMusic();
-          } else {
-            music.play().then(() => {
-              localStorage.setItem('musicConfirmed', 'yes');
-            }).catch(() => {});
-          }
-        }, 200);
-        window.removeEventListener('click', continueHandler);
-        window.removeEventListener('touchstart', continueHandler);
-      };
-      window.addEventListener('click', continueHandler);
-      window.addEventListener('touchstart', continueHandler);
-    }, 3000);
+          tapText.classList.add('show');
+          setTimeout(() => {
+            tapText.classList.add('loop');
+            enableTap();
+          }, 800);
+        }, 300);
+      }
+    };
+    step();
+  };
+  const enableTap = () => {
+    const continueHandler = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      loadingScreen.classList.add('exit');
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+        document.body.style.overflow = '';
+        sessionStorage.setItem('memoryGameLoaded', 'true');
+        tryPlayMusic();
+        localStorage.setItem('musicConfirmed', 'yes');
+        if (exitBtn) exitBtn.style.display = '';
+      }, 600);
+      window.removeEventListener('click', continueHandler, { passive: false });
+      window.removeEventListener('touchstart', continueHandler, { passive: false });
+    };
+    window.addEventListener('click', continueHandler, { passive: false });
+    window.addEventListener('touchstart', continueHandler, { passive: false });
+  };
+  if (!alreadyLoaded && loadingScreen && tapText) {
+    document.body.style.overflow = 'hidden';
+    animateProgress();
   } else {
     if (loadingScreen) loadingScreen.style.display = 'none';
-    if (hasConfirmed) {
-      tryPlayMusic();
-    } else {
+    if (exitBtn) exitBtn.style.display = '';
+    if (hasConfirmed) tryPlayMusic();
+    else {
       const enableMusic = () => {
-        music.play().then(() => {
-          localStorage.setItem('musicConfirmed', 'yes');
-        }).catch(() => {});
+        tryPlayMusic();
+        localStorage.setItem('musicConfirmed', 'yes');
         window.removeEventListener('click', enableMusic);
         window.removeEventListener('touchstart', enableMusic);
         window.removeEventListener('scroll', enableMusic);
