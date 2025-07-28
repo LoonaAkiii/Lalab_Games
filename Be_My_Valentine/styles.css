@@ -195,8 +195,8 @@ p {
   50% { opacity: 0.4; }
 }
 .tap-text {
-  position: fixed;
-  bottom: 380px;
+  position: absolute;
+  bottom: -40px;
   width: 100%;
   text-align: center;
   display: none;
@@ -204,6 +204,7 @@ p {
   font-size: 24px;
   color: #a20060;
   animation: blink 1s infinite;
+  pointer-events: none;
 }
 .tap-text.show {
   display: block;
