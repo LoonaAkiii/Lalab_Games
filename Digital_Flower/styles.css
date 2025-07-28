@@ -315,7 +315,7 @@ button:hover {
 }
 .tap-text {
   position: absolute;
-  bottom: 380px;
+  bottom: -40px;
   width: 100%;
   text-align: center;
   display: none;
