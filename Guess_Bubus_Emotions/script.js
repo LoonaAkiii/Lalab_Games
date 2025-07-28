@@ -281,17 +281,19 @@ document.addEventListener('DOMContentLoaded', () => {
     progressIcon.style.opacity = '1';
     const iconWidth = progressIcon.offsetWidth;
     const barWidth = progressWrapper.clientWidth;
-    const maxLeft = barWidth - iconWidth;
+    const adjustedOffset = 22;
+    const maxLeft = barWidth - iconWidth + adjustedOffset;
     const step = () => {
-      if (progress < 100) {
-        progress += 1;
+      if (progress <= 100) {
         const eased = easeInOutSine(progress / 100);
-        progressFill.style.width = progress + '%';
-        progressIcon.style.left = (maxLeft * eased) + 'px';
+        const easedLeft = maxLeft * eased;
+        progressFill.style.width = ((easedLeft + iconWidth / 2) / barWidth) * 100 + '%';
+        progressIcon.style.left = easedLeft + 'px';
+        progress++;
         setTimeout(step, 30);
       } else {
         progressFill.style.width = '100%';
-        progressIcon.style.left = (maxLeft + 20) + 'px';
+        progressIcon.style.left = maxLeft + 'px';
         setTimeout(() => {
           tapText.classList.add('show');
           setTimeout(() => {
