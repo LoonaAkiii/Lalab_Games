@@ -97,29 +97,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const hasConfirmed = localStorage.getItem('musicConfirmed');
   const alreadyLoaded = sessionStorage.getItem('digitalflower');
   const tryPlayMusic = () => {
-    if (music && music.paused) {
-      music.play().catch(() => {});
-    }
+    if (music && music.paused) music.play().catch(() => {});
   };
   const easeInOutSine = t => -(Math.cos(Math.PI * t) - 1) / 2;
   const animateProgress = () => {
-    let progress = 0;
-    progressIcon.style.opacity = '1';
     const iconWidth = progressIcon.offsetWidth;
     const barWidth = progressWrapper.clientWidth;
-    const maxLeft = barWidth - iconWidth;
-    const step = () => {
-      if (progress < 100) {
-        progress += 1;
-        let delay = 30;
-        if (progress >= 40 && progress <= 75) delay = 15;
-        const eased = easeInOutSine(progress / 100);
-        progressFill.style.width = progress + '%';
-        progressIcon.style.left = (maxLeft * eased) + 'px';
-        setTimeout(step, delay);
+    const iconOffset = 22;
+    const maxLeft = barWidth - iconWidth + iconOffset;
+    const duration = 3000;
+    const start = performance.now();
+    const step = (now) => {
+      const elapsed = now - start;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = easeInOutSine(t);
+      progressIcon.style.left = (maxLeft * eased) + 'px';
+      progressFill.style.width = ((maxLeft * eased + iconWidth / 2) / barWidth * 100) + '%';
+      if (t < 1) {
+        requestAnimationFrame(step);
       } else {
         progressFill.style.width = '100%';
-        progressIcon.style.left = (maxLeft + 20) + 'px';
+        progressIcon.style.left = maxLeft + 'px';
         setTimeout(() => {
           tapText.classList.add('show');
           setTimeout(() => {
@@ -129,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
       }
     };
-    step();
+    requestAnimationFrame(step);
   };
   const enableTap = () => {
     const continueHandler = (e) => {
@@ -152,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   if (!alreadyLoaded && loadingScreen && tapText) {
     document.body.style.overflow = 'hidden';
+    progressIcon.style.opacity = '1';
     animateProgress();
   } else {
     if (loadingScreen) loadingScreen.style.display = 'none';
