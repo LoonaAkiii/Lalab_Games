@@ -111,7 +111,6 @@ button {
   font-weight: bold;
   cursor: pointer;
   z-index: 9999;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -219,39 +218,24 @@ button {
   transform: rotate(1deg);
 }
 @keyframes yidon {
-  50% {
-    transform: translateY(5%);
-  }
-  100% {
-    transform: translateY(10%);
-  }
+  50% {transform: translateY(5%);}
+  100% {transform: translateY(10%);}
 }
 @keyframes zhankai1 {
-  50% {
-    transform: rotate(110deg);
-  }
-  100% {
-    transform: rotate(90deg);
-  }
+  50% {transform: rotate(110deg);}
+  100% {transform: rotate(90deg);}
 }
 @keyframes zhankai2 {
-  50% {
-    transform: rotate(-20deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+  50% {transform: rotate(-20deg);}
+  100% {transform: rotate(0deg);}
 }
 @media (max-width: 480px) {
-  input, button {
-    width: 100%;
-    font-size: 16px;
-  }
+  input, button {width: 100%; font-size: 16px;}
 }
 @keyframes bounceClick {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {transform: scale(1);}
+  50% {transform: scale(1.05);}
+  100% {transform: scale(1);}
 }
 .bounce {
   animation: bounceClick 0.3s ease;
@@ -307,8 +291,8 @@ button {
   pointer-events: none;
 }
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%, 100% {opacity: 1;}
+  50% {opacity: 0.4;}
 }
 .tap-text {
   position: absolute;
@@ -330,17 +314,17 @@ button {
   animation: tapFadeLoop 1.2s ease-in-out infinite;
 }
 @keyframes tapFadeIn {
-  0% { opacity: 0; transform: translateY(10px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {opacity: 0; transform: translateY(10px);}
+  100% {opacity: 1; transform: translateY(0);}
 }
 @keyframes tapFadeLoop {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+  0%, 100% {opacity: 1;}
+  50% {opacity: 0.2;}
 }
 #loading-screen.exit {
   animation: loaderExitUp 0.6s ease forwards;
 }
 @keyframes loaderExitUp {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+  0% {transform: translateY(0);}
+  100% {transform: translateY(-100%);}
 }
