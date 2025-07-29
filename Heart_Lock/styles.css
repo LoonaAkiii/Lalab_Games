@@ -29,7 +29,6 @@ body * {
   border-radius: 20px;
   padding: 10px 20px;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   z-index: 99;
   transition: transform 0.3s ease;
 }
@@ -111,18 +110,9 @@ body * {
   color: #dd131c;
 }
 @media (max-width: 480px) {
-  .digit-box {
-    width: 14vw;
-  }
-  .digit-box button {
-    height: 7vw;
-    font-size: 4vw;
-  }
-  .digit-value {
-    height: 9vw;
-    font-size: 5vw;
-    line-height: 9vw;
-  }
+  .digit-box {width: 14vw;}
+  .digit-box button {height: 7vw; font-size: 4vw;}
+  .digit-value {height: 9vw; font-size: 5vw; line-height: 9vw;}
 }
 #letterScreen {
   display: none;
@@ -208,8 +198,8 @@ body * {
   pointer-events: none;
 }
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%, 100% {opacity: 1;}
+  50% {opacity: 0.4;}
 }
 .tap-text {
   position: absolute;
@@ -233,17 +223,17 @@ body * {
   animation: tapFadeLoop 1.2s ease-in-out infinite;
 }
 @keyframes tapFadeIn {
-  0% { opacity: 0; transform: translateY(10px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {opacity: 0; transform: translateY(10px);}
+  100% {opacity: 1; transform: translateY(0);}
 }
 @keyframes tapFadeLoop {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+  0%, 100% {opacity: 1;}
+  50% {opacity: 0.2;}
 }
 #loading-screen.exit {
   animation: loaderExitUp 0.6s ease forwards;
 }
 @keyframes loaderExitUp {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+  0% {transform: translateY(0);}
+  100% {transform: translateY(-100%);}
 }
