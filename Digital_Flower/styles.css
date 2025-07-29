@@ -62,9 +62,6 @@ button {
   border: none;
   cursor: pointer;
 }
-button:hover {
-  background-color: #D45487;
-}
 #notification {
   margin-top: 10px;
   padding: 10px 16px;
