@@ -124,20 +124,17 @@ h1 {
   transition: transform 0.3s ease;
 }
 .dialog button:hover {
-  background-color: #d16b80;
   transform: scale(1.05);
 }
 #noButton {
   background-color: #FFD1DC;
   font-family: 'Jua', sans-serif;
   margin-right: 10px;
-}
-#noButton:hover {
-  background-color: #DEB5BF;
-}
-.shrink {
-  transform: scale(0.7);
+  transform: scale(1);
   transition: transform 0.3s ease;
+}
+#noButton.shrink {
+  transform: scale(0.7);
 }
 .hidden-button {
   display: none;
@@ -185,7 +182,6 @@ h1 {
   font-weight: bold;
   cursor: pointer;
   z-index: 3000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
 }
 #exit-button:hover {
@@ -286,8 +282,8 @@ h1 {
   animation: tapFadeLoop 1.2s ease-in-out infinite;
 }
 @keyframes tapFadeIn {
-  0% { opacity: 0; transform: translateY(10px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {opacity: 0; transform: translateY(10px);}
+  100% {opacity: 1; transform: translateY(0);}
 }
 @keyframes tapFadeLoop {
   0%, 100% { opacity: 1; }
@@ -297,6 +293,6 @@ h1 {
   animation: loaderExitUp 0.6s ease forwards;
 }
 @keyframes loaderExitUp {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+  0% {transform: translateY(0);}
+  100% {transform: translateY(-100%);}
 }

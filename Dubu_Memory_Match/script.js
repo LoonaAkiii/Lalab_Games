@@ -130,6 +130,8 @@ function showDoubleNyeheyyy() {
 function handleNoButtonClick() {
   const btn = document.getElementById('noButton');
   if (!btn.classList.contains('shrink')) {
+    btn.classList.remove('shrink');
+    void btn.offsetWidth;
     btn.classList.add('shrink');
   } else {
     btn.classList.add('hidden-button');
@@ -154,6 +156,10 @@ document.getElementById('playAgainButton').addEventListener('click', () => {
   firstCard = null;
   secondCard = null;
   lockBoard = false;
+  const noButton = document.getElementById('noButton');
+  if (noButton) {
+    noButton.classList.remove('hidden-button', 'shrink');
+  }
   initGame();
 });
 function initGame() {
