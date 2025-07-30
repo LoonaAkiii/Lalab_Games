@@ -95,4 +95,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+  const secretCard = document.querySelector('.game-card:nth-child(6) a');
+  if (secretCard) {
+    secretCard.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cp = '13';
+      const userInput = prompt('Bawal ka pa rito bantotie ka! >:((');
+      if (userInput === cp) {
+        window.location.href = secretCard.getAttribute('href');
+      } else if (userInput !== null) {
+        alert('Bantotie ka! >:((');
+      }
+    });
+  }
 });
