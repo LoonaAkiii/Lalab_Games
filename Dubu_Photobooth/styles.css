@@ -1,0 +1,192 @@
+* {
+  box-sizing: border-box;
+  touch-action: manipulation;
+}
+body {
+  font-family: 'Jua', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(to bottom, #faced3 0%, #ebc2cb 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+input[type="text"] {
+  -webkit-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text;
+}
+h2, p {
+  text-align: center;
+  color: #a20060;
+  margin: 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 12px;
+  gap: 10px;
+}
+input, button {
+  font-size: 16px;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+input {
+  width: 230px;
+  font-family: 'Jua', sans-serif;
+  background: #fff;
+}
+input:focus {
+  border-color: #ff66a3;
+  box-shadow: 0 0 5px #ffc2d1;
+}
+button {
+  background-color: #ff66a3;
+  color: white;
+  font-family: 'Jua', sans-serif;
+  border: none;
+  cursor: pointer;
+}
+#exit-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: 128.02px;
+  height: 38px;
+  background-color: #f78da7;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-family: 'Jua', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.3s ease;
+}
+#exit-btn:hover {
+  background-color: #d16b80;
+  transform: scale(1.05);
+}
+#exit-btn.hidden {
+  display: none;
+}
+#photobooth {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 125%;
+  height: auto;
+  image-rendering: smooth;
+}
+@media (max-width: 480px) {
+  input, button {width: 100%; font-size: 16px;}
+}
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom right, #ffe6f0, #ffd6ec);
+  color: #a20060;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Jua', sans-serif;
+  font-size: 28px;
+  z-index: 9999;
+}
+.progress-container {
+  position: relative;
+  width: 80%;
+  max-width: 300px;
+  height: 80px;
+}
+.progress-wrapper {
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  height: 30px;
+  background: #ffe0ec;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 1;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f78da7, #ffb6c1);
+  width: 0%;
+  transition: width 0.3s linear;
+}
+#progress-icon {
+  position: absolute;
+  bottom: 55px;
+  width: 80px;
+  height: auto;
+  transform: translateY(50%);
+  opacity: 0;
+  transition: left 0.2 linear;
+  z-index: 3;
+  pointer-events: none;
+}
+@keyframes blink {
+  0%, 100% {opacity: 1;}
+  50% {opacity: 0.4;}
+}
+.tap-text {
+  position: absolute;
+  bottom: -40px;
+  width: 100%;
+  text-align: center;
+  display: none;
+  opacity: 0;
+  font-size: 24px;
+  color: #a20060;
+  animation: blink 1s infinite;
+  pointer-events: none;
+}
+.tap-text.show {
+  display: block;
+  animation: tapFadeIn 0.8s ease forwards;
+}
+.tap-text.loop {
+  animation: tapFadeLoop 1.2s ease-in-out infinite;
+}
+@keyframes tapFadeIn {
+  0% {opacity: 0; transform: translateY(10px);}
+  100% {opacity: 1; transform: translateY(0);}
+}
+@keyframes tapFadeLoop {
+  0%, 100% {opacity: 1;}
+  50% {opacity: 0.2;}
+}
+#loading-screen.exit {
+  animation: loaderExitUp 0.6s ease forwards;
+}
+@keyframes loaderExitUp {
+  0% {transform: translateY(0);}
+  100% {transform: translateY(-100%);}
+}

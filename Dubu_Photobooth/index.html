@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Dubu Photobooth</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+<body oncontextmenu="return false">
+  <div id="loading-screen">
+    <div class="progress-container">
+      <div class="progress-wrapper">
+        <div class="progress-bar" id="progress-fill"></div>
+      </div>
+      <img src="../loadingscreen.png" alt="loader icon" id="progress-icon">
+      <div class="tap-text">Tap to continue...</div>
+    </div>
+  </div>
+  <audio id="bg-music" src="music.mp3" loop playsinline></audio>
+  <button id="exit-btn" class="hidden" onclick="exitGame()">EXIT GAME</button>
+  <img id="photobooth" src="photobooth.png" alt="PhotoBooth" />
+  <script src="script.js"></script>
+</body>
+</html>
