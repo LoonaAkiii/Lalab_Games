@@ -85,3 +85,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+const tapOverlay = document.getElementById('tap-overlay');
+const screenContainer = document.getElementById('screen-container');
+const avatarImg = document.getElementById('avatar-img');
+const nextBtn = document.getElementById('next-btn');
+let currentAvatar = 0;
+const avatars = ['img/Haru.png', 'img/Cheeze.png', 'img/LifeFourCuts.png', 'img/LifeFourCuts2.png'];
+tapOverlay.addEventListener('click', () => {
+  tapOverlay.style.display = 'none';
+  document.getElementById('photobooth').style.display = 'none';
+  screenContainer.classList.remove('hidden');
+});
+avatarImg.addEventListener('click', () => {
+  avatarImg.classList.toggle('selected');
+});
+nextBtn.addEventListener('click', () => {
+  const avatarArea = document.querySelector('.avatar-area');
+  avatarArea.classList.remove('anim-in');
+  avatarArea.classList.add('anim-out');
+  setTimeout(() => {
+    currentAvatar = (currentAvatar + 1) % avatars.length;
+    avatarImg.src = avatars[currentAvatar];
+    avatarImg.classList.remove('selected');
+    avatarArea.classList.remove('anim-out');
+    avatarArea.classList.add('anim-in');
+  }, 300);
+});

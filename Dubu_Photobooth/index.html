@@ -20,6 +20,21 @@
   <audio id="bg-music" src="music.mp3" loop playsinline></audio>
   <button id="exit-btn" class="hidden" onclick="exitGame()">EXIT GAME</button>
   <img id="photobooth" src="photobooth.png" alt="PhotoBooth" />
+  <div id="tap-overlay">
+    <span class="tap-name">Tap</span>
+  </div>
+  <div id="screen-container" class="hidden">
+    <img id="screen-bg" src="screen.png" alt="Screen Background" />
+    <div id="selector-ui">
+      <div class="avatar-area">
+        <img id="avatar-img" src="img/Haru.png" alt="Avatar" />
+        <div class="btn-wrapper">
+          <button id="next-btn">›</button>
+          <button id="print-btn">Print</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
