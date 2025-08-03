@@ -91,7 +91,8 @@ const avatarImg = document.getElementById('avatar-img');
 const nextBtn = document.getElementById('next-btn');
 let currentAvatar = 0;
 const avatars = ['img/Haru.png', 'img/Cheeze.png', 'img/LifeFourCuts.png', 'img/LifeFourCuts2.png'];
-tapOverlay.addEventListener('click', () => {
+tapOverlay.addEventListener('click', (e) => {
+  if (e.target.id === 'second-tap') return;
   tapOverlay.style.display = 'none';
   document.getElementById('photobooth').style.display = 'none';
   screenContainer.classList.remove('hidden');
@@ -110,4 +111,12 @@ nextBtn.addEventListener('click', () => {
     avatarArea.classList.remove('anim-out');
     avatarArea.classList.add('anim-in');
   }, 300);
+});
+const secondTap = document.getElementById('second-tap');
+const claimScreen = document.getElementById('claim-screen');
+secondTap.addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('photobooth').style.display = 'none';
+  tapOverlay.style.display = 'none';
+  claimScreen.style.display = 'flex';
 });

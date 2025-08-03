@@ -22,7 +22,13 @@
   <button id="exit-btn" class="hidden" onclick="exitGame()">EXIT GAME</button>
   <img id="photobooth" src="photobooth.png" alt="PhotoBooth" />
   <div id="tap-overlay">
-    <span class="material-icons tap-icon">touch_app</span>
+    <div class="tap-icons-wrapper">
+      <span class="material-icons tap-icon">touch_app</span>
+      <span class="material-icons tap-icon second-tap" id="second-tap">touch_app</span>
+    </div>
+  </div>
+  <div id="claim-screen">
+    <img src="claim.png" alt="Claim Screen" />
   </div>
   <div id="screen-container" class="hidden">
     <img id="screen-bg" src="screen.png" alt="Screen Background" />
