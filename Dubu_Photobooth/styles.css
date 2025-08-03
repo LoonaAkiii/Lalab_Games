@@ -115,10 +115,10 @@ button {
 @media (max-width: 480px) {
   #tap-overlay {padding-top: 31vh;}
 }
-.tap-name {
-  font-size: 32px;
-  color: #a20060;
-  font-family: 'Jua', sans-serif;
+.tap-icon.material-icons {
+  font-family: 'Material Icons';
+  font-size: 50px !important;
+  color: #f78da7;
   animation: blink 1s infinite;
   pointer-events: auto;
   cursor: pointer;
@@ -177,7 +177,8 @@ button {
   border: 3px solid #ff66a3;
 }
 #next-btn {
-  font-size: 24px;
+  font-size: 36px;
+  font-weight: bold;
   width: 48px;
   height: 48px;
   background-color: #f78da7;
@@ -186,6 +187,11 @@ button {
   color: white;
   font-family: 'Jua', sans-serif;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
 }
 .btn-wrapper {
   display: flex;
