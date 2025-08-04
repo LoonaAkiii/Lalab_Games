@@ -102,14 +102,14 @@ avatarImg.addEventListener('click', () => {
 });
 nextBtn.addEventListener('click', () => {
   const avatarArea = document.querySelector('.avatar-area');
-  avatarArea.classList.remove('anim-in');
-  avatarArea.classList.add('anim-out');
+  avatarImg.classList.remove('anim-in');
+  avatarImg.classList.add('anim-out');
   setTimeout(() => {
     currentAvatar = (currentAvatar + 1) % avatars.length;
     avatarImg.src = avatars[currentAvatar];
     avatarImg.classList.remove('selected');
-    avatarArea.classList.remove('anim-out');
-    avatarArea.classList.add('anim-in');
+    avatarImg.classList.remove('anim-out');
+    avatarImg.classList.add('anim-in');
   }, 300);
 });
 const secondTap = document.getElementById('second-tap');
@@ -119,4 +119,16 @@ secondTap.addEventListener('click', (e) => {
   document.getElementById('photobooth').style.display = 'none';
   tapOverlay.style.display = 'none';
   claimScreen.style.display = 'flex';
+});
+const backFromScreenBtn = document.getElementById('back-from-screen');
+const backFromClaimBtn = document.getElementById('back-from-claim');
+backFromScreenBtn.addEventListener('click', () => {
+  screenContainer.classList.add('hidden');
+  document.getElementById('photobooth').style.display = 'block';
+  tapOverlay.style.display = 'block';
+});
+backFromClaimBtn.addEventListener('click', () => {
+  claimScreen.style.display = 'none';
+  document.getElementById('photobooth').style.display = 'block';
+  tapOverlay.style.display = 'block';
 });

@@ -22,22 +22,22 @@
   <button id="exit-btn" class="hidden" onclick="exitGame()">EXIT GAME</button>
   <img id="photobooth" src="photobooth.png" alt="PhotoBooth" />
   <div id="tap-overlay">
-    <div class="tap-icons-wrapper">
-      <span class="material-icons tap-icon">touch_app</span>
-      <span class="material-icons tap-icon second-tap" id="second-tap">touch_app</span>
-    </div>
+    <span class="material-icons tap-icon first-tap" id="first-tap">touch_app</span>
+    <span class="material-icons tap-icon second-tap" id="second-tap">touch_app</span>
   </div>
   <div id="claim-screen">
     <img src="claim.png" alt="Claim Screen" />
+    <button id="back-from-claim" class="back-btn">BACK</button>
   </div>
   <div id="screen-container" class="hidden">
     <img id="screen-bg" src="screen.png" alt="Screen Background" />
+    <button id="back-from-screen" class="back-btn">BACK</button>
     <div id="selector-ui">
       <div class="avatar-area">
         <img id="avatar-img" src="img/Haru.png" alt="Avatar" />
         <div class="btn-wrapper">
           <button id="next-btn">›</button>
-          <button id="print-btn">Print</button>
+          <button id="print-btn">PRINT</button>
         </div>
       </div>
     </div>
