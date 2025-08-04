@@ -50,13 +50,10 @@ input {
   width: 230px;
   font-family: 'Jua', sans-serif;
   background: #fff;
-}
-input:focus {
-  border-color: #ff66a3;
-  box-shadow: 0 0 5px #ffc2d1;
+  border: 2px solid #a20060;
 }
 button {
-  background-color: #ff66a3;
+  background-color: #f78da7;
   color: white;
   font-family: 'Jua', sans-serif;
   border: none;
