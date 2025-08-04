@@ -65,8 +65,8 @@ button {
   font-size: 16px;
 }
 #exit-btn {
+  position: fixed;
   max-width: fit-content;
-  position: absolute;
   top: 1vh;
   left: 2vw;
   background-color: #f78da7;
@@ -87,7 +87,7 @@ button {
   display: none;
 }
 #photobooth {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
