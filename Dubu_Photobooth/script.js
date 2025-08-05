@@ -132,3 +132,55 @@ backFromClaimBtn.addEventListener('click', () => {
   document.getElementById('photobooth').style.display = 'block';
   tapOverlay.style.display = 'block';
 });
+const printBtn = document.getElementById('print-btn');
+let selectedAvatar = '';
+printBtn.addEventListener('click', () => {
+  if (!avatarImg.classList.contains('selected')) return;
+  selectedAvatar = avatars[currentAvatar];
+  sessionStorage.setItem('printedAvatar', selectedAvatar);
+  document.getElementById('selector-ui').style.display = 'none';
+  screenContainer.classList.add('hidden');
+  document.getElementById('photobooth').style.display = 'block';
+  tapOverlay.style.display = 'block';
+  const firstTap = document.getElementById('first-tap');
+  firstTap.style.pointerEvents = 'none';
+  firstTap.style.opacity = '0.4';
+  setTimeout(() => {
+    firstTap.style.pointerEvents = 'auto';
+    firstTap.style.opacity = '1';
+  }, 10000);
+  tapOverlay.style.pointerEvents = 'none';
+  setTimeout(() => {
+    tapOverlay.style.pointerEvents = 'auto';
+  }, 10000);
+});
+secondTap.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const claimScreen = document.getElementById('claim-screen');
+  const backFromClaimBtn = document.getElementById('back-from-claim');
+  const printedAvatar = sessionStorage.getItem('printedAvatar');
+  if (!printedAvatar) return;
+  claimScreen.innerHTML = '';
+  const claimBg = document.createElement('img');
+  claimBg.src = 'claim.png';
+  claimBg.style.position = 'absolute';
+  claimBg.style.width = '100%';
+  claimBg.style.height = '100%';
+  claimBg.style.zIndex = '1';
+  claimScreen.appendChild(claimBg);
+  const claimedImg = document.createElement('img');
+  claimedImg.src = printedAvatar;
+  claimedImg.classList.add('claim-avatar');
+  claimedImg.style.zIndex = '2';
+  claimScreen.appendChild(claimedImg);
+  claimScreen.appendChild(backFromClaimBtn);
+  claimedImg.addEventListener('animationend', () => {
+    claimedImg.addEventListener('click', () => {
+      if (claimedImg.requestFullscreen) claimedImg.requestFullscreen();
+      else if (claimedImg.webkitRequestFullscreen) claimedImg.webkitRequestFullscreen();
+    });
+  });
+  document.getElementById('photobooth').style.display = 'none';
+  tapOverlay.style.display = 'none';
+  claimScreen.style.display = 'flex';
+});
