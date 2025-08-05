@@ -95,8 +95,9 @@ button {
 }
 #exit-btn {
   position: fixed;
-  top: 10px;
-  left: 10px;
+  max-width: fit-content;
+  top: 1vh;
+  left: 2vw;
   width: 128.02px;
   height: 38px;
   background-color: #f78da7;
@@ -111,7 +112,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: 10px 20px;
   transition: transform 0.3s ease;
 }
 #exit-btn:hover {
