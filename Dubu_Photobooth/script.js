@@ -163,16 +163,38 @@ secondTap.addEventListener('click', (e) => {
   claimScreen.innerHTML = '';
   const claimBg = document.createElement('img');
   claimBg.src = 'claim.png';
-  claimBg.style.position = 'absolute';
-  claimBg.style.width = '100%';
-  claimBg.style.height = '100%';
-  claimBg.style.zIndex = '1';
+  Object.assign(claimBg.style, {
+    position: 'absolute',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    zIndex: '1',
+  });
   claimScreen.appendChild(claimBg);
+  const claimOverlay = document.createElement('img');
+  claimOverlay.src = 'claim2.png';
+  Object.assign(claimOverlay.style, {
+    position: 'absolute',
+    top: '6.1%',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '54.5%',
+    height: 'auto',
+    zIndex: '3',
+    pointerEvents: 'none',
+  });
+  claimScreen.appendChild(claimOverlay);
   const claimedImg = document.createElement('img');
   claimedImg.src = printedAvatar;
   claimedImg.classList.add('claim-avatar');
   claimedImg.style.zIndex = '2';
   claimScreen.appendChild(claimedImg);
+  Object.assign(backFromClaimBtn.style, {
+    zIndex: '10',
+    display: 'block',
+    pointerEvents: 'auto',
+  });
   claimScreen.appendChild(backFromClaimBtn);
   claimedImg.addEventListener('animationend', () => {
     claimedImg.addEventListener('click', () => {
