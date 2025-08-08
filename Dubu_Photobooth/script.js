@@ -89,19 +89,26 @@ const tapOverlay = document.getElementById('tap-overlay');
 const screenContainer = document.getElementById('screen-container');
 const avatarImg = document.getElementById('avatar-img');
 const nextBtn = document.getElementById('next-btn');
+const selectorUI = document.getElementById('selector-ui');
+const firstTap = document.getElementById('first-tap');
+const secondTap = document.getElementById('second-tap');
+const claimScreen = document.getElementById('claim-screen');
+const backFromScreenBtn = document.getElementById('back-from-screen');
+const backFromClaimBtn = document.getElementById('back-from-claim');
 let currentAvatar = 0;
 const avatars = ['img/Haru.png', 'img/Cheeze.png', 'img/LifeFourCuts.png', 'img/LifeFourCuts2.png'];
+let selectedAvatar = '';
 tapOverlay.addEventListener('click', (e) => {
-  if (e.target.id === 'second-tap') return;
+  if (e.target.id !== 'first-tap') return;
   tapOverlay.style.display = 'none';
   document.getElementById('photobooth').style.display = 'none';
   screenContainer.classList.remove('hidden');
+  selectorUI.style.display = 'flex';
 });
 avatarImg.addEventListener('click', () => {
   avatarImg.classList.toggle('selected');
 });
 nextBtn.addEventListener('click', () => {
-  const avatarArea = document.querySelector('.avatar-area');
   avatarImg.classList.remove('anim-in');
   avatarImg.classList.add('anim-out');
   setTimeout(() => {
@@ -112,16 +119,6 @@ nextBtn.addEventListener('click', () => {
     avatarImg.classList.add('anim-in');
   }, 300);
 });
-const secondTap = document.getElementById('second-tap');
-const claimScreen = document.getElementById('claim-screen');
-secondTap.addEventListener('click', (e) => {
-  e.stopPropagation();
-  document.getElementById('photobooth').style.display = 'none';
-  tapOverlay.style.display = 'none';
-  claimScreen.style.display = 'flex';
-});
-const backFromScreenBtn = document.getElementById('back-from-screen');
-const backFromClaimBtn = document.getElementById('back-from-claim');
 backFromScreenBtn.addEventListener('click', () => {
   screenContainer.classList.add('hidden');
   document.getElementById('photobooth').style.display = 'block';
@@ -133,31 +130,26 @@ backFromClaimBtn.addEventListener('click', () => {
   tapOverlay.style.display = 'block';
 });
 const printBtn = document.getElementById('print-btn');
-let selectedAvatar = '';
 printBtn.addEventListener('click', () => {
   if (!avatarImg.classList.contains('selected')) return;
   selectedAvatar = avatars[currentAvatar];
   sessionStorage.setItem('printedAvatar', selectedAvatar);
-  document.getElementById('selector-ui').style.display = 'none';
+  sessionStorage.setItem('claimAnimationPlayed', 'false');
+  selectorUI.style.display = 'flex';
   screenContainer.classList.add('hidden');
   document.getElementById('photobooth').style.display = 'block';
+  firstTap.style.display = 'none';
   tapOverlay.style.display = 'block';
-  const firstTap = document.getElementById('first-tap');
-  firstTap.style.pointerEvents = 'none';
-  firstTap.style.opacity = '0.4';
-  setTimeout(() => {
-    firstTap.style.pointerEvents = 'auto';
-    firstTap.style.opacity = '1';
-  }, 10000);
   tapOverlay.style.pointerEvents = 'none';
+  firstTap.style.pointerEvents = 'none';
   setTimeout(() => {
-    tapOverlay.style.pointerEvents = 'auto';
+    firstTap.style.display = 'inline';
+    tapOverlay.style.pointerEvents = 'none';
+    firstTap.style.pointerEvents = 'auto';
   }, 10000);
 });
 secondTap.addEventListener('click', (e) => {
   e.stopPropagation();
-  const claimScreen = document.getElementById('claim-screen');
-  const backFromClaimBtn = document.getElementById('back-from-claim');
   const printedAvatar = sessionStorage.getItem('printedAvatar');
   if (!printedAvatar) return;
   claimScreen.innerHTML = '';
@@ -176,10 +168,11 @@ secondTap.addEventListener('click', (e) => {
   claimOverlay.src = 'claim2.png';
   Object.assign(claimOverlay.style, {
     position: 'absolute',
-    top: '6.1%',
+    top: '5.9vh',
     left: '50%',
     transform: 'translateX(-50%)',
-    width: '54.5%',
+    width: '55vw',
+    maxWidth: '300px',
     height: 'auto',
     zIndex: '3',
     pointerEvents: 'none',
@@ -187,8 +180,21 @@ secondTap.addEventListener('click', (e) => {
   claimScreen.appendChild(claimOverlay);
   const claimedImg = document.createElement('img');
   claimedImg.src = printedAvatar;
-  claimedImg.classList.add('claim-avatar');
   claimedImg.style.zIndex = '2';
+  const hasAnimated = sessionStorage.getItem('claimAnimationPlayed') === 'true';
+  if (!hasAnimated) {
+    claimedImg.classList.add('claim-avatar');
+    sessionStorage.setItem('claimAnimationPlayed', 'true');
+  } else {
+    Object.assign(claimedImg.style, {
+      width: '50%',
+      maxWidth: '240px',
+      marginTop: '210px',
+      position: 'relative',
+      cursor: 'pointer',
+      transform: 'translateY(10px)',
+    });
+  }
   claimScreen.appendChild(claimedImg);
   Object.assign(backFromClaimBtn.style, {
     zIndex: '10',
@@ -196,11 +202,9 @@ secondTap.addEventListener('click', (e) => {
     pointerEvents: 'auto',
   });
   claimScreen.appendChild(backFromClaimBtn);
-  claimedImg.addEventListener('animationend', () => {
-    claimedImg.addEventListener('click', () => {
-      if (claimedImg.requestFullscreen) claimedImg.requestFullscreen();
-      else if (claimedImg.webkitRequestFullscreen) claimedImg.webkitRequestFullscreen();
-    });
+  claimedImg.addEventListener('click', () => {
+    if (claimedImg.requestFullscreen) claimedImg.requestFullscreen();
+    else if (claimedImg.webkitRequestFullscreen) claimedImg.webkitRequestFullscreen();
   });
   document.getElementById('photobooth').style.display = 'none';
   tapOverlay.style.display = 'none';
