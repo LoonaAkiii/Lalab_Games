@@ -162,34 +162,42 @@ secondTap.addEventListener('click', (e) => {
   claimWrapper.appendChild(claimBg);
   const claimedImg = document.createElement('img');
   claimedImg.src = printedAvatar;
-  Object.assign(claimedImg.style, {zIndex: '1',position: 'absolute',top: '50%',left: '50%',width: '50%',maxWidth: '240px',cursor: 'pointer'});
-  const hasAnimated = sessionStorage.getItem('claimAnimationPlayed') === 'true';
-  if (!hasAnimated) {
-    claimedImg.classList.add('claim-avatar');
-    sessionStorage.setItem('claimAnimationPlayed', 'true');
-  }
+  Object.assign(claimedImg.style, {zIndex: '1',position: 'absolute',top: '50%',left: '50%',width: '50%',maxWidth: '240px',cursor: 'pointer',transform: 'translate3d(-50%,-195%,0)',willChange: 'transform'});
   claimWrapper.appendChild(claimedImg);
   const claimOverlay = document.createElement('img');
   claimOverlay.src = 'claim2.png';
   Object.assign(claimOverlay.style, {position: 'absolute',top: '0',left: '0',width: '100%',height: '100%',objectFit: 'contain',zIndex: '2',pointerEvents: 'none'});
   claimWrapper.appendChild(claimOverlay);
-  if (hasAnimated) {
-    requestAnimationFrame(() => {
-      const avatarHeight = claimedImg.offsetHeight;
-      const offsetY = -(avatarHeight * 0.11);
-      claimedImg.style.transform = `translate(-50%, ${offsetY}px)`;
-    });
-  }
   Object.assign(backFromClaimBtn.style, {zIndex: '10',display: 'block',pointerEvents: 'auto'});
   claimScreen.appendChild(backFromClaimBtn);
-  claimedImg.addEventListener('click', () => {
-    if (claimedImg.requestFullscreen) claimedImg.requestFullscreen();
-    else if (claimedImg.webkitRequestFullscreen) claimedImg.webkitRequestFullscreen();
-  });
   document.getElementById('photobooth').style.display = 'none';
   tapOverlay.style.display = 'none';
   claimScreen.style.display = 'flex';
   claimScreen.style.flexDirection = 'column';
   claimScreen.style.alignItems = 'center';
   claimScreen.style.justifyContent = 'center';
+  const hasAnimated = sessionStorage.getItem('claimAnimationPlayed') === 'true';
+  const waitForImage = (img) => new Promise((resolve) => {
+    if (img.complete && img.naturalWidth !== 0) return resolve();
+    img.addEventListener('load', resolve, {once: true});
+    img.addEventListener('error', resolve, {once: true});
+  });
+  Promise.all([waitForImage(claimBg), waitForImage(claimOverlay), waitForImage(claimedImg)]).then(() => {
+    void claimWrapper.offsetWidth;
+    if (!hasAnimated) {
+      claimedImg.style.transform = 'translate3d(-50%,-195%,0)';
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          claimedImg.classList.add('claim-avatar');
+          sessionStorage.setItem('claimAnimationPlayed', 'true');
+        }, 30);
+      });
+    } else {
+      claimedImg.style.transform = 'translate3d(-50%, -11%, 0)';
+    }
+  });
+  claimedImg.addEventListener('click', () => {
+    if (claimedImg.requestFullscreen) claimedImg.requestFullscreen();
+    else if (claimedImg.webkitRequestFullscreen) claimedImg.webkitRequestFullscreen();
+  });
 });
