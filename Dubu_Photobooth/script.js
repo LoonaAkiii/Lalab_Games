@@ -153,54 +153,34 @@ secondTap.addEventListener('click', (e) => {
   const printedAvatar = sessionStorage.getItem('printedAvatar');
   if (!printedAvatar) return;
   claimScreen.innerHTML = '';
+  const claimWrapper = document.createElement('div');
+  Object.assign(claimWrapper.style, {position: 'relative',display: 'inline-block',width: '100%',maxWidth: '100vw',height: 'auto'});
+  claimScreen.appendChild(claimWrapper);
   const claimBg = document.createElement('img');
   claimBg.src = 'claim.png';
-  Object.assign(claimBg.style, {
-    position: 'absolute',
-    top: '0',
-    left: '0',
-    width: '100%',
-    height: '100%',
-    zIndex: '1',
-  });
-  claimScreen.appendChild(claimBg);
-  const claimOverlay = document.createElement('img');
-  claimOverlay.src = 'claim2.png';
-  Object.assign(claimOverlay.style, {
-    position: 'absolute',
-    top: '5.9vh',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    width: '55vw',
-    maxWidth: '300px',
-    height: 'auto',
-    zIndex: '3',
-    pointerEvents: 'none',
-  });
-  claimScreen.appendChild(claimOverlay);
+  Object.assign(claimBg.style, {display: 'block',width: '100%',height: 'auto'});
+  claimWrapper.appendChild(claimBg);
   const claimedImg = document.createElement('img');
   claimedImg.src = printedAvatar;
-  claimedImg.style.zIndex = '2';
+  Object.assign(claimedImg.style, {zIndex: '1',position: 'absolute',top: '50%',left: '50%',width: '50%',maxWidth: '240px',cursor: 'pointer'});
   const hasAnimated = sessionStorage.getItem('claimAnimationPlayed') === 'true';
   if (!hasAnimated) {
     claimedImg.classList.add('claim-avatar');
     sessionStorage.setItem('claimAnimationPlayed', 'true');
-  } else {
-    Object.assign(claimedImg.style, {
-      width: '50%',
-      maxWidth: '240px',
-      marginTop: '210px',
-      position: 'relative',
-      cursor: 'pointer',
-      transform: 'translateY(10px)',
+  }
+  claimWrapper.appendChild(claimedImg);
+  const claimOverlay = document.createElement('img');
+  claimOverlay.src = 'claim2.png';
+  Object.assign(claimOverlay.style, {position: 'absolute',top: '0',left: '0',width: '100%',height: '100%',objectFit: 'contain',zIndex: '2',pointerEvents: 'none'});
+  claimWrapper.appendChild(claimOverlay);
+  if (hasAnimated) {
+    requestAnimationFrame(() => {
+      const avatarHeight = claimedImg.offsetHeight;
+      const offsetY = -(avatarHeight * 0.11);
+      claimedImg.style.transform = `translate(-50%, ${offsetY}px)`;
     });
   }
-  claimScreen.appendChild(claimedImg);
-  Object.assign(backFromClaimBtn.style, {
-    zIndex: '10',
-    display: 'block',
-    pointerEvents: 'auto',
-  });
+  Object.assign(backFromClaimBtn.style, {zIndex: '10',display: 'block',pointerEvents: 'auto'});
   claimScreen.appendChild(backFromClaimBtn);
   claimedImg.addEventListener('click', () => {
     if (claimedImg.requestFullscreen) claimedImg.requestFullscreen();
@@ -209,4 +189,7 @@ secondTap.addEventListener('click', (e) => {
   document.getElementById('photobooth').style.display = 'none';
   tapOverlay.style.display = 'none';
   claimScreen.style.display = 'flex';
+  claimScreen.style.flexDirection = 'column';
+  claimScreen.style.alignItems = 'center';
+  claimScreen.style.justifyContent = 'center';
 });

@@ -271,37 +271,27 @@ button {
   width: 50% !important;
   max-width: 240px !important;
   margin-top: 210px;
-  animation: printSwipeDown 5s cubic-bezier(0.15, 1, 0.3, 1) forwards;
-  -webkit-animation: printSwipeDown 5s cubic-bezier(0.15, 1, 0.3, 1) forwards;
+  animation: printSwipeDown 5s cubic-bezier(0.5, 0, 0.2, 1) forwards;
+  -webkit-animation: printSwipeDown 5s cubic-bezier(0.5, 0, 0.2, 1) forwards;
   will-change: transform;
   cursor: pointer;
   position: relative;
 }
 @-webkit-keyframes printSwipeDown {
-  0% {-webkit-transform: translateY(-100%);}
-  10% {-webkit-transform: translateY(-90%);}
-  20% {-webkit-transform: translateY(-80%);}
-  30% {-webkit-transform: translateY(-60%);}
-  40% {-webkit-transform: translateY(-45%);}
-  50% {-webkit-transform: translateY(-30%);}
-  60% {-webkit-transform: translateY(-20%);}
-  70% {-webkit-transform: translateY(-10%);}
-  80% {-webkit-transform: translateY(-2%);}
-  90% {-webkit-transform: translateY(5px);}
-  100% {-webkit-transform: translateY(10px);}
+  0%   {transform: translate(-50%, -195%);}
+  20%  {transform: translate(-50%, -175%);}
+  40%  {transform: translate(-50%, -155%);}
+  60%  {transform: translate(-50%, -135%);}
+  80%  {transform: translate(-50%, -115%);}
+  100% {transform: translate(-50%, -83%);}
 }
 @keyframes printSwipeDown {
-  0% {transform: translateY(-100%);}
-  10% {transform: translateY(-90%);}
-  20% {transform: translateY(-80%);}
-  30% {transform: translateY(-60%);}
-  40% {transform: translateY(-45%);}
-  50% {transform: translateY(-30%);}
-  60% {transform: translateY(-20%);}
-  70% {transform: translateY(-10%);}
-  80% {transform: translateY(-2%);}
-  90% {transform: translateY(5px);}
-  100% {transform: translateY(10px);}
+  0%   {transform: translate(-50%, -195%);}
+  20%  {transform: translate(-50%, -175%);}
+  40%  {transform: translate(-50%, -155%);}
+  60%  {transform: translate(-50%, -135%);}
+  80%  {transform: translate(-50%, -115%);}
+  100% {transform: translate(-50%, -83%);}
 }
 #loading-screen {
   position: fixed;
