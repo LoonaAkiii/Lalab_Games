@@ -154,21 +154,54 @@ secondTap.addEventListener('click', (e) => {
   if (!printedAvatar) return;
   claimScreen.innerHTML = '';
   const claimWrapper = document.createElement('div');
-  Object.assign(claimWrapper.style, {position: 'relative',display: 'inline-block',width: '100%',maxWidth: '100vw',height: 'auto'});
+  Object.assign(claimWrapper.style, {
+    position: 'relative',
+    display: 'inline-block',
+    width: '100%',
+    maxWidth: '100vw',
+    height: 'auto'
+  });
   claimScreen.appendChild(claimWrapper);
   const claimBg = document.createElement('img');
   claimBg.src = 'claim.png';
-  Object.assign(claimBg.style, {display: 'block',width: '100%',height: 'auto'});
+  Object.assign(claimBg.style, {
+    display: 'block',
+    width: '100%',
+    height: 'auto'
+  });
   claimWrapper.appendChild(claimBg);
   const claimedImg = document.createElement('img');
   claimedImg.src = printedAvatar;
-  Object.assign(claimedImg.style, {zIndex: '1',position: 'absolute',top: '50%',left: '50%',width: '50%',maxWidth: '240px',cursor: 'pointer',transform: 'translate3d(-50%,-195%,0)',willChange: 'transform'});
+  Object.assign(claimedImg.style, {
+    zIndex: '1',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    width: '50%',
+    maxWidth: '240px',
+    cursor: 'pointer',
+    transform: 'translate3d(-50%,-195%,0)',
+    willChange: 'transform'
+  });
   claimWrapper.appendChild(claimedImg);
   const claimOverlay = document.createElement('img');
   claimOverlay.src = 'claim2.png';
-  Object.assign(claimOverlay.style, {position: 'absolute',top: '0',left: '0',width: '100%',height: '100%',objectFit: 'contain',zIndex: '2',pointerEvents: 'none'});
+  Object.assign(claimOverlay.style, {
+    position: 'absolute',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+    zIndex: '2',
+    pointerEvents: 'none'
+  });
   claimWrapper.appendChild(claimOverlay);
-  Object.assign(backFromClaimBtn.style, {zIndex: '10',display: 'block',pointerEvents: 'auto'});
+  Object.assign(backFromClaimBtn.style, {
+    zIndex: '10',
+    display: 'block',
+    pointerEvents: 'auto'
+  });
   claimScreen.appendChild(backFromClaimBtn);
   document.getElementById('photobooth').style.display = 'none';
   tapOverlay.style.display = 'none';
@@ -179,10 +212,14 @@ secondTap.addEventListener('click', (e) => {
   const hasAnimated = sessionStorage.getItem('claimAnimationPlayed') === 'true';
   const waitForImage = (img) => new Promise((resolve) => {
     if (img.complete && img.naturalWidth !== 0) return resolve();
-    img.addEventListener('load', resolve, {once: true});
-    img.addEventListener('error', resolve, {once: true});
+    img.addEventListener('load', resolve, { once: true });
+    img.addEventListener('error', resolve, { once: true });
   });
-  Promise.all([waitForImage(claimBg), waitForImage(claimOverlay), waitForImage(claimedImg)]).then(() => {
+  Promise.all([
+    waitForImage(claimBg),
+    waitForImage(claimOverlay),
+    waitForImage(claimedImg)
+  ]).then(() => {
     void claimWrapper.offsetWidth;
     if (!hasAnimated) {
       claimedImg.style.transform = 'translate3d(-50%,-195%,0)';
@@ -197,17 +234,63 @@ secondTap.addEventListener('click', (e) => {
     }
   });
   claimedImg.addEventListener('click', () => {
-    if (claimedImg.requestFullscreen) claimedImg.requestFullscreen();
-    else if (claimedImg.webkitRequestFullscreen) claimedImg.webkitRequestFullscreen();
+    const fsContainer = document.createElement('div');
+    Object.assign(fsContainer.style, {
+      position: 'relative',
+      width: '100%',
+      height: '100%',
+      background: 'black',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    });
+    const fsAvatar = document.createElement('img');
+    fsAvatar.src = printedAvatar;
+    Object.assign(fsAvatar.style, {
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain',
+      cursor: 'default'
+    });
+    fsContainer.appendChild(fsAvatar);
+    const fullscreenCloseBtn = document.createElement('button');
+    fullscreenCloseBtn.textContent = 'X';
+    Object.assign(fullscreenCloseBtn.style, {
+      position: 'absolute',
+      top: '10px',
+      right: '10px',
+      fontSize: '24px',
+      background: '#f78da7',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: '10000',
+      cursor: 'pointer'
+    });
+    fsContainer.appendChild(fullscreenCloseBtn);
+    document.body.appendChild(fsContainer);
+    if (fsContainer.requestFullscreen) fsContainer.requestFullscreen();
+    else if (fsContainer.webkitRequestFullscreen) fsContainer.webkitRequestFullscreen();
+    fullscreenCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    });
+    const removeContainer = () => {
+      fsContainer.remove();
+      document.removeEventListener('fullscreenchange', removeContainer);
+      document.removeEventListener('webkitfullscreenchange', removeContainer);
+    };
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) removeContainer();
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+      if (!document.webkitFullscreenElement) removeContainer();
+    });
   });
-});
-const fullscreenExitBtn = document.getElementById('fullscreen-exit');
-document.addEventListener('fullscreenchange', () => {
-  fullscreenExitBtn.classList.toggle('hidden', !document.fullscreenElement);
-});
-fullscreenExitBtn.addEventListener('click', () => {
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-    claimScreen.style.display = 'flex';
-  }
 });
