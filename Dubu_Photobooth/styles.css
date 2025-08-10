@@ -119,10 +119,10 @@ button {
   transform: translateX(-50%);
 }
 .first-tap {
-  top: 31vh;
+  top: 30%;
 }
 .second-tap {
-  top: 71vh;
+  top: 71%;
 }
 #screen-container.hidden {
   display: none;
@@ -292,6 +292,32 @@ button {
   60%  {transform: translate(-50%, -135%);}
   80%  {transform: translate(-50%, -115%);}
   100% {transform: translate(-50%, -83%);}
+}
+#fullscreen-exit {
+  position: fixed;
+  top: 1vh;
+  right: 2vw;
+  background-color: #f78da7;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-family: 'Jua', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#fullscreen-exit.hidden {
+  display: none;
+}
+#fullscreen-exit:hover {
+  background-color: #d16b80;
+  transform: scale(1.05);
 }
 #loading-screen {
   position: fixed;

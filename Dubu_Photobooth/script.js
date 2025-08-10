@@ -201,3 +201,13 @@ secondTap.addEventListener('click', (e) => {
     else if (claimedImg.webkitRequestFullscreen) claimedImg.webkitRequestFullscreen();
   });
 });
+const fullscreenExitBtn = document.getElementById('fullscreen-exit');
+document.addEventListener('fullscreenchange', () => {
+  fullscreenExitBtn.classList.toggle('hidden', !document.fullscreenElement);
+});
+fullscreenExitBtn.addEventListener('click', () => {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+    claimScreen.style.display = 'flex';
+  }
+});
