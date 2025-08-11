@@ -236,21 +236,23 @@ secondTap.addEventListener('click', (e) => {
   claimedImg.addEventListener('click', () => {
     const fsContainer = document.createElement('div');
     Object.assign(fsContainer.style, {
-      position: 'relative',
-      width: '100%',
-      height: '100%',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
       background: 'black',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      zIndex: 99999
     });
     const fsAvatar = document.createElement('img');
     fsAvatar.src = printedAvatar;
     Object.assign(fsAvatar.style, {
-      width: '100%',
-      height: '100%',
-      objectFit: 'contain',
-      cursor: 'default'
+      maxWidth: '100%',
+      maxHeight: '100%',
+      objectFit: 'contain'
     });
     fsContainer.appendChild(fsAvatar);
     const fullscreenCloseBtn = document.createElement('button');
@@ -269,28 +271,12 @@ secondTap.addEventListener('click', (e) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: '10000',
       cursor: 'pointer'
+    });
+    fullscreenCloseBtn.addEventListener('click', () => {
+      fsContainer.remove();
     });
     fsContainer.appendChild(fullscreenCloseBtn);
     document.body.appendChild(fsContainer);
-    if (fsContainer.requestFullscreen) fsContainer.requestFullscreen();
-    else if (fsContainer.webkitRequestFullscreen) fsContainer.webkitRequestFullscreen();
-    fullscreenCloseBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (document.exitFullscreen) document.exitFullscreen();
-      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-    });
-    const removeContainer = () => {
-      fsContainer.remove();
-      document.removeEventListener('fullscreenchange', removeContainer);
-      document.removeEventListener('webkitfullscreenchange', removeContainer);
-    };
-    document.addEventListener('fullscreenchange', () => {
-      if (!document.fullscreenElement) removeContainer();
-    });
-    document.addEventListener('webkitfullscreenchange', () => {
-      if (!document.webkitFullscreenElement) removeContainer();
-    });
   });
 });
