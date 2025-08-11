@@ -182,6 +182,7 @@ secondTap.addEventListener('click', (e) => {
     cursor: 'pointer',
     transform: 'translate3d(-50%,-195%,0)',
     willChange: 'transform',
+    opacity: '0',
     backfaceVisibility: 'hidden',
     WebkitBackfaceVisibility: 'hidden',
     WebkitTransform: 'translate3d(-50%,-195%,0)'
@@ -223,17 +224,16 @@ secondTap.addEventListener('click', (e) => {
     waitForImage(claimOverlay),
     waitForImage(claimedImg)
   ]).then(() => {
-    claimedImg.style.transform = 'translate3d(-50%,-195%,0)';
-    claimedImg.style.WebkitTransform = 'translate3d(-50%,-195%,0)';
-    void claimedImg.offsetHeight;
+    void claimWrapper.offsetWidth;
     if (!hasAnimated) {
+      claimedImg.style.opacity = '1';
       requestAnimationFrame(() => {
         claimedImg.classList.add('claim-avatar');
         sessionStorage.setItem('claimAnimationPlayed', 'true');
       });
     } else {
+      claimedImg.style.opacity = '1';
       claimedImg.style.transform = 'translate3d(-50%, -11%, 0)';
-      claimedImg.style.WebkitTransform = 'translate3d(-50%, -11%, 0)';
     }
   });
   claimedImg.addEventListener('click', () => {
