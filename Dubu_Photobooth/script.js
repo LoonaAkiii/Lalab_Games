@@ -179,13 +179,12 @@ secondTap.addEventListener('click', (e) => {
     left: '50%',
     width: '50%',
     maxWidth: '240px',
-    cursor: 'pointer',
     transform: 'translate3d(-50%,-195%,0)',
-    willChange: 'transform',
     opacity: '0',
     backfaceVisibility: 'hidden',
     WebkitBackfaceVisibility: 'hidden',
-    WebkitTransform: 'translate3d(-50%,-195%,0)'
+    cursor: 'pointer',
+    pointerEvents: 'none'
   });
   claimWrapper.appendChild(claimedImg);
   const claimOverlay = document.createElement('img');
@@ -219,21 +218,21 @@ secondTap.addEventListener('click', (e) => {
     img.addEventListener('load', resolve, { once: true });
     img.addEventListener('error', resolve, { once: true });
   });
-  Promise.all([
-    waitForImage(claimBg),
-    waitForImage(claimOverlay),
-    waitForImage(claimedImg)
-  ]).then(() => {
+  Promise.all([waitForImage(claimBg), waitForImage(claimOverlay), waitForImage(claimedImg)]).then(() => {
     void claimWrapper.offsetWidth;
     if (!hasAnimated) {
       claimedImg.style.opacity = '1';
       requestAnimationFrame(() => {
         claimedImg.classList.add('claim-avatar');
         sessionStorage.setItem('claimAnimationPlayed', 'true');
+        setTimeout(() => {
+          claimedImg.style.pointerEvents = 'auto';
+        }, 5000);
       });
     } else {
       claimedImg.style.opacity = '1';
       claimedImg.style.transform = 'translate3d(-50%, -11%, 0)';
+      claimedImg.style.pointerEvents = 'auto';
     }
   });
   claimedImg.addEventListener('click', () => {
@@ -291,7 +290,7 @@ secondTap.addEventListener('click', (e) => {
       document.body.removeChild(link);
     });
     const fullscreenCloseBtn = document.createElement('button');
-    fullscreenCloseBtn.innerHTML = '<span class="material-icons">close_fullscreen</span>';
+    fullscreenCloseBtn.innerHTML = '<span class="material-icons">close</span>';
     Object.assign(fullscreenCloseBtn.style, {
       background: '#f78da7',
       color: '#fff',
@@ -306,7 +305,7 @@ secondTap.addEventListener('click', (e) => {
       fontSize: '24px'
     });
     fullscreenCloseBtn.addEventListener('click', () => {
-      fsContainer.remove();
+      document.body.removeChild(fsContainer);
     });
     btnWrapper.appendChild(downloadBtn);
     btnWrapper.appendChild(fullscreenCloseBtn);
