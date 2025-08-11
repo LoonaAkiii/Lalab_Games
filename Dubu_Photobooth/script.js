@@ -181,7 +181,10 @@ secondTap.addEventListener('click', (e) => {
     maxWidth: '240px',
     cursor: 'pointer',
     transform: 'translate3d(-50%,-195%,0)',
-    willChange: 'transform'
+    willChange: 'transform',
+    backfaceVisibility: 'hidden',
+    WebkitBackfaceVisibility: 'hidden',
+    WebkitTransform: 'translate3d(-50%,-195%,0)'
   });
   claimWrapper.appendChild(claimedImg);
   const claimOverlay = document.createElement('img');
@@ -220,17 +223,17 @@ secondTap.addEventListener('click', (e) => {
     waitForImage(claimOverlay),
     waitForImage(claimedImg)
   ]).then(() => {
-    void claimWrapper.offsetWidth;
+    claimedImg.style.transform = 'translate3d(-50%,-195%,0)';
+    claimedImg.style.WebkitTransform = 'translate3d(-50%,-195%,0)';
+    void claimedImg.offsetHeight;
     if (!hasAnimated) {
-      claimedImg.style.transform = 'translate3d(-50%,-195%,0)';
       requestAnimationFrame(() => {
-        setTimeout(() => {
-          claimedImg.classList.add('claim-avatar');
-          sessionStorage.setItem('claimAnimationPlayed', 'true');
-        }, 30);
+        claimedImg.classList.add('claim-avatar');
+        sessionStorage.setItem('claimAnimationPlayed', 'true');
       });
     } else {
       claimedImg.style.transform = 'translate3d(-50%, -11%, 0)';
+      claimedImg.style.WebkitTransform = 'translate3d(-50%, -11%, 0)';
     }
   });
   claimedImg.addEventListener('click', () => {
