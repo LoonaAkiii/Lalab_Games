@@ -255,13 +255,18 @@ secondTap.addEventListener('click', (e) => {
       objectFit: 'contain'
     });
     fsContainer.appendChild(fsAvatar);
-    const fullscreenCloseBtn = document.createElement('button');
-    fullscreenCloseBtn.textContent = 'X';
-    Object.assign(fullscreenCloseBtn.style, {
+    const btnWrapper = document.createElement('div');
+    Object.assign(btnWrapper.style, {
       position: 'absolute',
       top: '10px',
       right: '10px',
-      fontSize: '24px',
+      display: 'flex',
+      gap: '10px',
+      zIndex: '100000'
+    });
+    const downloadBtn = document.createElement('button');
+    downloadBtn.innerHTML = '<span class="material-icons">download</span>';
+    Object.assign(downloadBtn.style, {
       background: '#f78da7',
       color: '#fff',
       border: 'none',
@@ -271,12 +276,38 @@ secondTap.addEventListener('click', (e) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      fontSize: '24px'
+    });
+    downloadBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.href = printedAvatar;
+      link.download = 'photobooth_image.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+    const fullscreenCloseBtn = document.createElement('button');
+    fullscreenCloseBtn.innerHTML = '<span class="material-icons">close_fullscreen</span>';
+    Object.assign(fullscreenCloseBtn.style, {
+      background: '#f78da7',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      fontSize: '24px'
     });
     fullscreenCloseBtn.addEventListener('click', () => {
       fsContainer.remove();
     });
-    fsContainer.appendChild(fullscreenCloseBtn);
+    btnWrapper.appendChild(downloadBtn);
+    btnWrapper.appendChild(fullscreenCloseBtn);
+    fsContainer.appendChild(btnWrapper);
     document.body.appendChild(fsContainer);
   });
 });
