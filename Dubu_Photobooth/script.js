@@ -13,7 +13,15 @@ const [
 const tapText = $$('.tap-text'), progressWrapper = $$('.progress-wrapper');
 let currentAvatar = 0, selectedAvatar = '';
 const avatars = ['img/Haru.png','img/Cheeze.png','img/LifeFourCuts.png','img/LifeFourCuts2.png'];
+function preventScroll(e) { e.preventDefault(); }
+function disableScroll() {
+  document.addEventListener('touchmove', preventScroll, { passive: false });
+}
+function enableScroll() {
+  document.removeEventListener('touchmove', preventScroll, { passive: false });
+}
 exitBtn.addEventListener('click', () => {
+  enableScroll();
   sessionStorage.removeItem('photobooth');
   location.href = "../index.html";
 });
@@ -54,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tryPlayMusic();
         localStorage.setItem('musicConfirmed', 'yes');
         exitBtn.classList.remove('hidden');
+        disableScroll();
       }, 600);
       ['click','touchstart'].forEach(evt => window.removeEventListener(evt, handler, {passive:false}));
     };
@@ -66,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     loadingScreen && (loadingScreen.style.display = 'none');
     exitBtn.classList.remove('hidden');
+    disableScroll();
     const enableMusic = () => {
       tryPlayMusic();
       localStorage.setItem('musicConfirmed', 'yes');
