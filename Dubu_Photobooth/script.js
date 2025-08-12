@@ -1,37 +1,35 @@
-const exitBtn = document.getElementById('exit-btn');
-const music = document.getElementById('bg-music');
-const loadingScreen = document.getElementById('loading-screen');
-const tapText = document.querySelector('.tap-text');
-const progressFill = document.getElementById('progress-fill');
-const progressIcon = document.getElementById('progress-icon');
-const progressWrapper = document.querySelector('.progress-wrapper');
+const $ = id => document.getElementById(id);
+const $$ = sel => document.querySelector(sel);
+const setStyles = (el, styles) => Object.assign(el.style, styles);
+const [
+  exitBtn, music, loadingScreen, progressFill, progressIcon, tapOverlay,
+  screenContainer, avatarImg, nextBtn, selectorUI, firstTap, secondTap,
+  claimScreen, backFromScreenBtn, backFromClaimBtn, printBtn
+] = [
+  'exit-btn','bg-music','loading-screen','progress-fill','progress-icon','tap-overlay',
+  'screen-container','avatar-img','next-btn','selector-ui','first-tap','second-tap',
+  'claim-screen','back-from-screen','back-from-claim','print-btn'
+].map($);
+const tapText = $$('.tap-text'), progressWrapper = $$('.progress-wrapper');
+let currentAvatar = 0, selectedAvatar = '';
+const avatars = ['img/Haru.png','img/Cheeze.png','img/LifeFourCuts.png','img/LifeFourCuts2.png'];
 exitBtn.addEventListener('click', () => {
   sessionStorage.removeItem('photobooth');
-  window.location.href = "../index.html";
+  location.href = "../index.html";
 });
 document.addEventListener('DOMContentLoaded', () => {
-  const hasConfirmed = localStorage.getItem('musicConfirmed');
-  const alreadyLoaded = sessionStorage.getItem('photobooth');
-  const tryPlayMusic = () => {
-    if (music && music.paused) music.play().catch(() => {});
-  };
-  const easeInOutSine = t => -(Math.cos(Math.PI * t) - 1) / 2;
+  const hasConfirmed = localStorage.getItem('musicConfirmed'),
+        alreadyLoaded = sessionStorage.getItem('photobooth'),
+        tryPlayMusic = () => music?.paused && music.play().catch(()=>{}),
+        easeInOutSine = t => -(Math.cos(Math.PI * t) - 1) / 2;
   const animateProgress = () => {
-    const iconWidth = progressIcon.offsetWidth;
-    const barWidth = progressWrapper.clientWidth;
-    const iconOffset = 22;
-    const maxLeft = barWidth - iconWidth + iconOffset;
-    const duration = 3000;
-    const start = performance.now();
-    const step = (now) => {
-      const elapsed = now - start;
-      const t = Math.min(elapsed / duration, 1);
-      const eased = easeInOutSine(t);
-      progressIcon.style.left = (maxLeft * eased) + 'px';
+    const iconWidth = progressIcon.offsetWidth, barWidth = progressWrapper.clientWidth,
+          maxLeft = barWidth - iconWidth + 22, duration = 3000, start = performance.now();
+    const step = now => {
+      const t = Math.min((now - start) / duration, 1), eased = easeInOutSine(t);
+      progressIcon.style.left = maxLeft * eased + 'px';
       progressFill.style.width = ((maxLeft * eased + iconWidth / 2) / barWidth * 100) + '%';
-      if (t < 1) {
-        requestAnimationFrame(step);
-      } else {
+      t < 1 ? requestAnimationFrame(step) : (() => {
         progressFill.style.width = '100%';
         progressIcon.style.left = maxLeft + 'px';
         setTimeout(() => {
@@ -41,14 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
             enableTap();
           }, 800);
         }, 300);
-      }
+      })();
     };
     requestAnimationFrame(step);
   };
   const enableTap = () => {
-    const continueHandler = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    const handler = e => {
+      e.preventDefault(); e.stopPropagation();
       loadingScreen.classList.add('exit');
       setTimeout(() => {
         loadingScreen.style.display = 'none';
@@ -58,78 +55,54 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('musicConfirmed', 'yes');
         exitBtn.classList.remove('hidden');
       }, 600);
-      window.removeEventListener('click', continueHandler, { passive: false });
-      window.removeEventListener('touchstart', continueHandler, { passive: false });
+      ['click','touchstart'].forEach(evt => window.removeEventListener(evt, handler, {passive:false}));
     };
-    window.addEventListener('click', continueHandler, { passive: false });
-    window.addEventListener('touchstart', continueHandler, { passive: false });
+    ['click','touchstart'].forEach(evt => window.addEventListener(evt, handler, {passive:false}));
   };
   if (!alreadyLoaded && loadingScreen && tapText) {
     document.body.style.overflow = 'hidden';
     progressIcon.style.opacity = '1';
     animateProgress();
   } else {
-    if (loadingScreen) loadingScreen.style.display = 'none';
+    loadingScreen && (loadingScreen.style.display = 'none');
     exitBtn.classList.remove('hidden');
     const enableMusic = () => {
       tryPlayMusic();
       localStorage.setItem('musicConfirmed', 'yes');
-      window.removeEventListener('click', enableMusic);
-      window.removeEventListener('touchstart', enableMusic);
+      ['click','touchstart'].forEach(evt => window.removeEventListener(evt, enableMusic));
     };
-    if (!hasConfirmed) {
-      window.addEventListener('click', enableMusic, { once: true });
-      window.addEventListener('touchstart', enableMusic, { once: true });
-    } else {
-      tryPlayMusic();
-    }
+    !hasConfirmed
+      ? ['click','touchstart'].forEach(evt => window.addEventListener(evt, enableMusic, {once:true}))
+      : tryPlayMusic();
   }
 });
-const tapOverlay = document.getElementById('tap-overlay');
-const screenContainer = document.getElementById('screen-container');
-const avatarImg = document.getElementById('avatar-img');
-const nextBtn = document.getElementById('next-btn');
-const selectorUI = document.getElementById('selector-ui');
-const firstTap = document.getElementById('first-tap');
-const secondTap = document.getElementById('second-tap');
-const claimScreen = document.getElementById('claim-screen');
-const backFromScreenBtn = document.getElementById('back-from-screen');
-const backFromClaimBtn = document.getElementById('back-from-claim');
-let currentAvatar = 0;
-const avatars = ['img/Haru.png', 'img/Cheeze.png', 'img/LifeFourCuts.png', 'img/LifeFourCuts2.png'];
-let selectedAvatar = '';
-tapOverlay.addEventListener('click', (e) => {
+tapOverlay.addEventListener('click', e => {
   if (e.target.id !== 'first-tap') return;
   tapOverlay.style.display = 'none';
-  document.getElementById('photobooth').style.display = 'none';
+  $('photobooth').style.display = 'none';
   screenContainer.classList.remove('hidden');
   selectorUI.style.display = 'flex';
 });
-avatarImg.addEventListener('click', () => {
-  avatarImg.classList.toggle('selected');
-});
+avatarImg.addEventListener('click', () => avatarImg.classList.toggle('selected'));
 nextBtn.addEventListener('click', () => {
-  avatarImg.classList.remove('anim-in');
-  avatarImg.classList.add('anim-out');
+  avatarImg.classList.replace('anim-in','anim-out');
   setTimeout(() => {
     currentAvatar = (currentAvatar + 1) % avatars.length;
     avatarImg.src = avatars[currentAvatar];
-    avatarImg.classList.remove('selected');
-    avatarImg.classList.remove('anim-out');
+    avatarImg.classList.remove('selected','anim-out');
     avatarImg.classList.add('anim-in');
   }, 300);
 });
 backFromScreenBtn.addEventListener('click', () => {
   screenContainer.classList.add('hidden');
-  document.getElementById('photobooth').style.display = 'block';
+  $('photobooth').style.display = 'block';
   tapOverlay.style.display = 'block';
 });
 backFromClaimBtn.addEventListener('click', () => {
   claimScreen.style.display = 'none';
-  document.getElementById('photobooth').style.display = 'block';
+  $('photobooth').style.display = 'block';
   tapOverlay.style.display = 'block';
 });
-const printBtn = document.getElementById('print-btn');
 printBtn.addEventListener('click', () => {
   if (!avatarImg.classList.contains('selected')) return;
   selectedAvatar = avatars[currentAvatar];
@@ -137,7 +110,7 @@ printBtn.addEventListener('click', () => {
   sessionStorage.setItem('claimAnimationPlayed', 'false');
   selectorUI.style.display = 'flex';
   screenContainer.classList.add('hidden');
-  document.getElementById('photobooth').style.display = 'block';
+  $('photobooth').style.display = 'block';
   firstTap.style.display = 'none';
   tapOverlay.style.display = 'block';
   tapOverlay.style.pointerEvents = 'none';
@@ -148,167 +121,58 @@ printBtn.addEventListener('click', () => {
     firstTap.style.pointerEvents = 'auto';
   }, 10000);
 });
-secondTap.addEventListener('click', (e) => {
+secondTap.addEventListener('click', e => {
   e.stopPropagation();
   const printedAvatar = sessionStorage.getItem('printedAvatar');
   if (!printedAvatar) return;
   claimScreen.innerHTML = '';
   const claimWrapper = document.createElement('div');
-  Object.assign(claimWrapper.style, {
-    position: 'relative',
-    display: 'inline-block',
-    width: '100%',
-    maxWidth: '100vw',
-    height: 'auto'
-  });
+  setStyles(claimWrapper, {position:'relative',display:'inline-block',width:'100%',maxWidth:'100vw',height:'auto'});
   claimScreen.appendChild(claimWrapper);
-  const claimBg = document.createElement('img');
-  claimBg.src = 'claim.png';
-  Object.assign(claimBg.style, {
-    display: 'block',
-    width: '100%',
-    height: 'auto'
-  });
-  claimWrapper.appendChild(claimBg);
-  const claimedImg = document.createElement('img');
-  claimedImg.src = printedAvatar;
-  Object.assign(claimedImg.style, {
-    zIndex: '1',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    width: '50%',
-    maxWidth: '240px',
-    transform: 'translate3d(-50%,-195%,0)',
-    opacity: '0',
-    backfaceVisibility: 'hidden',
-    WebkitBackfaceVisibility: 'hidden',
-    cursor: 'pointer',
-    pointerEvents: 'none'
-  });
-  claimWrapper.appendChild(claimedImg);
-  const claimOverlay = document.createElement('img');
-  claimOverlay.src = 'claim2.png';
-  Object.assign(claimOverlay.style, {
-    position: 'absolute',
-    top: '0',
-    left: '0',
-    width: '100%',
-    height: '100%',
-    objectFit: 'contain',
-    zIndex: '2',
-    pointerEvents: 'none'
-  });
-  claimWrapper.appendChild(claimOverlay);
-  Object.assign(backFromClaimBtn.style, {
-    zIndex: '10',
-    display: 'block',
-    pointerEvents: 'auto'
-  });
+  const imgEl = (src, styles) => { const i = new Image(); i.src = src; setStyles(i, styles); return i; };
+  const claimBg = imgEl('claim.png', {display:'block',width:'100%',height:'auto'});
+  const claimedImg = imgEl(printedAvatar, {zIndex:1,position:'absolute',top:'50%',left:'50%',width:'50%',maxWidth:'240px',transform:'translate3d(-50%,-195%,0)',opacity:0,backfaceVisibility:'hidden',WebkitBackfaceVisibility:'hidden',cursor:'pointer',pointerEvents:'none'});
+  const claimOverlay = imgEl('claim2.png', {position:'absolute',top:0,left:0,width:'100%',height:'100%',objectFit:'contain',zIndex:2,pointerEvents:'none'});
+  [claimBg, claimedImg, claimOverlay].forEach(el => claimWrapper.appendChild(el));
+  setStyles(backFromClaimBtn, {zIndex:10,display:'block',pointerEvents:'auto'});
   claimScreen.appendChild(backFromClaimBtn);
-  document.getElementById('photobooth').style.display = 'none';
+  setStyles(claimScreen, {display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'});
+  $('photobooth').style.display = 'none';
   tapOverlay.style.display = 'none';
-  claimScreen.style.display = 'flex';
-  claimScreen.style.flexDirection = 'column';
-  claimScreen.style.alignItems = 'center';
-  claimScreen.style.justifyContent = 'center';
   const hasAnimated = sessionStorage.getItem('claimAnimationPlayed') === 'true';
-  const waitForImage = (img) => new Promise((resolve) => {
-    if (img.complete && img.naturalWidth !== 0) return resolve();
-    img.addEventListener('load', resolve, { once: true });
-    img.addEventListener('error', resolve, { once: true });
-  });
-  Promise.all([waitForImage(claimBg), waitForImage(claimOverlay), waitForImage(claimedImg)]).then(() => {
+  const waitForImage = img => new Promise(res => (img.complete && img.naturalWidth) ? res() : img.addEventListener('load', res, {once:true}));
+  Promise.all([claimBg, claimOverlay, claimedImg].map(waitForImage)).then(() => {
     void claimWrapper.offsetWidth;
     if (!hasAnimated) {
-      claimedImg.style.opacity = '1';
+      claimedImg.style.opacity = 1;
       requestAnimationFrame(() => {
         claimedImg.classList.add('claim-avatar');
         sessionStorage.setItem('claimAnimationPlayed', 'true');
-        setTimeout(() => {
-          claimedImg.style.pointerEvents = 'auto';
-        }, 5000);
+        setTimeout(() => claimedImg.style.pointerEvents = 'auto', 5000);
       });
     } else {
-      claimedImg.style.opacity = '1';
-      claimedImg.style.transform = 'translate3d(-50%, -11%, 0)';
-      claimedImg.style.pointerEvents = 'auto';
+      setStyles(claimedImg, {opacity:1,transform:'translate3d(-50%, -11%, 0)',pointerEvents:'auto'});
     }
   });
   claimedImg.addEventListener('click', () => {
     const fsContainer = document.createElement('div');
-    Object.assign(fsContainer.style, {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      background: 'black',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 99999
-    });
-    const fsAvatar = document.createElement('img');
-    fsAvatar.src = printedAvatar;
-    Object.assign(fsAvatar.style, {
-      maxWidth: '100%',
-      maxHeight: '100%',
-      objectFit: 'contain'
-    });
-    fsContainer.appendChild(fsAvatar);
+    setStyles(fsContainer, {position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'black',display:'flex',alignItems:'center',justifyContent:'center',zIndex:99999});
+    fsContainer.appendChild(imgEl(printedAvatar, {maxWidth:'100%',maxHeight:'100%',objectFit:'contain'}));
     const btnWrapper = document.createElement('div');
-    Object.assign(btnWrapper.style, {
-      position: 'absolute',
-      top: '10px',
-      right: '10px',
-      display: 'flex',
-      gap: '10px',
-      zIndex: '100000'
-    });
-    const downloadBtn = document.createElement('button');
-    downloadBtn.innerHTML = '<span class="material-icons">download</span>';
-    Object.assign(downloadBtn.style, {
-      background: '#f78da7',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '50%',
-      width: '40px',
-      height: '40px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      fontSize: '24px'
-    });
-    downloadBtn.addEventListener('click', () => {
+    setStyles(btnWrapper, {position:'absolute',top:'10px',right:'10px',display:'flex',gap:'10px',zIndex:100000});
+    const makeBtn = (icon, click) => {
+      const b = document.createElement('button');
+      b.innerHTML = `<span class="material-icons">${icon}</span>`;
+      setStyles(b, {background:'#f78da7',color:'#fff',border:'none',borderRadius:'50%',width:'40px',height:'40px',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:'24px'});
+      b.addEventListener('click', click);
+      return b;
+    };
+    btnWrapper.appendChild(makeBtn('download', () => {
       const link = document.createElement('a');
-      link.href = printedAvatar;
-      link.download = 'photobooth_image.png';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-    const fullscreenCloseBtn = document.createElement('button');
-    fullscreenCloseBtn.innerHTML = '<span class="material-icons">close</span>';
-    Object.assign(fullscreenCloseBtn.style, {
-      background: '#f78da7',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '50%',
-      width: '40px',
-      height: '40px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      fontSize: '24px'
-    });
-    fullscreenCloseBtn.addEventListener('click', () => {
-      document.body.removeChild(fsContainer);
-    });
-    btnWrapper.appendChild(downloadBtn);
-    btnWrapper.appendChild(fullscreenCloseBtn);
+      link.href = printedAvatar; link.download = 'photobooth_image.png';
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    }));
+    btnWrapper.appendChild(makeBtn('close', () => document.body.removeChild(fsContainer)));
     fsContainer.appendChild(btnWrapper);
     document.body.appendChild(fsContainer);
   });
