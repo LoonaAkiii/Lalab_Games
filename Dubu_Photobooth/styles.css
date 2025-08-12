@@ -1,5 +1,11 @@
 *{box-sizing:border-box;touch-action:manipulation}
-html,body{width:100%;max-width:100%;overflow-x:hidden}
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;max-width:100%;
+  position:fixed;top:0;left:0;
+  overscroll-behavior:none;
+  -webkit-overflow-scrolling:auto;
+}
 body{font-family:'Jua',sans-serif;margin:0;padding:20px;background:linear-gradient(to bottom,#faced3 0%,#ebc2cb 100%);display:flex;flex-direction:column;align-items:center;min-height:100vh;-webkit-touch-callout:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 h2,p{text-align:center;color:#a20060;margin:5px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 input,button{font-size:16px;padding:10px 14px;border-radius:20px;outline:none;transition:.2s}
