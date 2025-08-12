@@ -3,8 +3,8 @@
   "short_name": "LalaHub",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#fff5f8",
-  "theme_color": "#ff69b4",
+  "background_color": "#ffe6f0",
+  "theme_color": "#ffd6ec",
   "icons": [
     {
       "src": "icon-192.png",
