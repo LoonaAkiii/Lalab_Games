@@ -22,14 +22,65 @@
     <div class="tap-text">Tap to continue...</div>
   </div>
 </div>
+<div id="win-popup" class="hidden">
+  <div class="popup-content">
+    <video class="popup-video" autoplay muted loop playsinline>
+      <source src="Characters/find1.mp4" type="video/mp4">
+    </video>
+    <p class="popup-desc">🎉 Dudu finally found Bubu! But Bubu<br>is still angry and keep on pushing dudu away.<br>Bubu run away again.</p>
+    <div class="popup-buttons">
+      <button id="giveup-btn">Give Up</button>
+      <button id="again-btn">Find Bubu Again</button>
+    </div>
+  </div>
+</div>
+<div id="win-popup-2" class="hidden">
+  <div class="popup-content">
+    <video class="popup-video" autoplay muted loop playsinline>
+      <source src="Characters/find2.mp4" type="video/mp4">
+    </video>
+    <p class="popup-desc">Dudu stop bubu from running away again and forced bubu to listen to him first. Bubu is crying but still listening to dudu.</p>
+    <button id="next-btn">Next</button>
+  </div>
+</div>
+<div id="assurance-popup" class="hidden">
+  <div class="popup-content">
+    <video class="popup-video" autoplay muted loop playsinline>
+      <source src="Characters/Assurance.mp4" type="video/mp4">
+    </video>
+    <p class="popup-desc">As Dudu and Bubu hugged, Dudu told Bubu that he loves her so much and will never leave her, even if she tries to push him away.</p>
+    <button id="resolution-btn">Resolution</button>
+  </div>
+</div>
+<div id="resolution-popup" class="hidden">
+  <div class="popup-content">
+    <video class="popup-video" autoplay muted loop playsinline>
+      <source src="Characters/Resolution.mp4" type="video/mp4">
+    </video>
+    <p class="popup-desc">Both Bubu and Dudu apologized. They were happy to be together again and promised that what happened would never happen again.</p>
+    <button id="end-btn">THE END</button>
+  </div>
+</div>
 <div id="intro-screen" class="intro">
   <h1>Dubu Maze</h1>
   <p>Bubu pushed Dudu away again, so now <br>Dudu has to find Bubu in the maze and<br>cuddle up to make things right. Guide<br>Dudu through the maze. Good luck!</p>
-  <img src="intro.gif" alt="How to play" class="intro-img">
+  <video class="intro-video" autoplay muted loop playsinline>
+    <source src="intro.mp4" type="video/mp4">
+  </video>
   <p class="note"><strong>Note:</strong> Use arrow keys to move.</p>
   <button id="play-btn">Find Bubu</button>
 </div>
 <canvas id="mazeCanvas"></canvas>
+<div id="mobile-controls" class="hidden">
+  <div class="arrow-row">
+    <button class="arrow-btn" data-dir="up">▲</button>
+  </div>
+  <div class="arrow-row">
+    <button class="arrow-btn" data-dir="left">◀</button>
+    <button class="arrow-btn" data-dir="down">▼</button>
+    <button class="arrow-btn" data-dir="right">▶</button>
+  </div>
+</div>
 <audio id="bg-music" src="music.mp3" loop playsinline></audio>
 <button id="exit-btn" class="hidden" onclick="exitGame()">EXIT GAME</button>
 <script src="script.js"></script>
