@@ -30,7 +30,7 @@ h2,p{text-align:center;color:#a20060;margin:5px 0;white-space:nowrap;overflow:hi
 input,button{font-size:16px;padding:10px 14px;border-radius:20px;outline:none;transition:.2s}
 input{width:230px;font-family:'Jua',sans-serif;background:#fff;border:1px solid #ccc}
 input:focus{border-color:#ff66a3;box-shadow:0 0 5px #ffc2d1}
-button{background:#ff66a3;color:#fff;font-family:'Jua',sans-serif;font-weight:bold;border:none;cursor:pointer}
+button{background:#f78da7;color:#fff;font-family:'Jua',sans-serif;font-weight:bold;border:none;cursor:pointer}
 #exit-btn{position:fixed;top:1vh;left:2vw;padding:10px 20px;border-radius:20px;background:#f78da7;z-index:9999;transition:.3s}
 #exit-btn:hover{background:#d16b80;transform:scale(1.05)}
 #exit-btn.hidden{display:none}
@@ -196,7 +196,10 @@ button{background:#ff66a3;color:#fff;font-family:'Jua',sans-serif;font-weight:bo
   color: #fff;
   transition: 0.2s;
 }
-.popup-buttons button:hover {
+.popup-buttons button:hover,
+#next-btn:hover,
+#resolution-btn:hover,
+#end-btn:hover {
   background: #d16b80;
   transform: scale(1.05);
 }

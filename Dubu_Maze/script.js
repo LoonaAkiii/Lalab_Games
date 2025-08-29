@@ -102,12 +102,10 @@ const CORNER_RADIUS_FACTOR = 0.35;
 const MOVE_SPEED = 0.15;
 let gameFrozen = false;
 let foundCount = 0;
-
 function isOpen(x, y) {
   if (y < 0 || y >= rows || x < 0 || x >= cols) return false;
   return maze[y][x] === 0;
 }
-
 function roundedRectPath(ctx, x, y, w, h, rtl, rtr, rbr, rbl) {
   const maxR = Math.min(w, h) / 2;
   rtl = Math.min(rtl, maxR);
@@ -125,7 +123,6 @@ function roundedRectPath(ctx, x, y, w, h, rtl, rtr, rbr, rbl) {
   ctx.lineTo(x, y + rtl);
   ctx.quadraticCurveTo(x, y, x + rtl, y);
 }
-
 function preloadVideos() {
   duduVideo = document.createElement("video");
   duduVideo.src = "Characters/Dudu.mp4";
@@ -133,15 +130,12 @@ function preloadVideos() {
   duduVideo.muted = true;
   duduVideo.setAttribute("playsinline", "");
   duduVideo.autoplay = false;
-
   bubuVideo = document.createElement("video");
   bubuVideo.src = "Characters/Bubu.mp4";
   bubuVideo.loop = true;
   bubuVideo.muted = true;
   bubuVideo.setAttribute("playsinline", "");
   bubuVideo.autoplay = false;
-
-  // Kickstart playback after first user gesture (iOS requirement)
   ["touchstart", "click"].forEach(evt => {
     window.addEventListener(
       evt,
@@ -153,7 +147,6 @@ function preloadVideos() {
     );
   });
 }
-
 function generateMaze() {
   maze = Array.from({ length: rows }, () => Array(cols).fill(1));
   function carve(x, y) {
@@ -190,12 +183,10 @@ function generateMaze() {
   } while (maze[gy][gx] !== 0 || dist < Math.floor(rows / 2));
   goal = { x: gx, y: gy };
 }
-
 function drawMaze() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player.px += (player.tx - player.px) * MOVE_SPEED;
   player.py += (player.ty - player.py) * MOVE_SPEED;
-
   let camX = player.px - canvas.width / (cellSize * zoomFactor * 2);
   let camY = player.py - canvas.height / (cellSize * zoomFactor * 2);
   camX = Math.max(
@@ -206,7 +197,6 @@ function drawMaze() {
     0,
     Math.min(rows - canvas.height / (cellSize * zoomFactor), camY)
   );
-
   ctx.fillStyle = WALL_COLOR;
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
@@ -231,8 +221,6 @@ function drawMaze() {
       }
     }
   }
-
-  // Always attempt draw — iOS may delay first frames
   ctx.drawImage(
     bubuVideo,
     (goal.x - camX) * cellSize * zoomFactor,
@@ -247,10 +235,8 @@ function drawMaze() {
     cellSize * zoomFactor,
     cellSize * zoomFactor
   );
-
   requestAnimationFrame(drawMaze);
 }
-
 function movePlayer(dx, dy) {
   if (gameFrozen) return;
   const nx = player.tx + dx;
@@ -261,9 +247,9 @@ function movePlayer(dx, dy) {
       player.ty = ny;
       foundCount++;
       if (foundCount === 1) {
-        document.getElementById("win-popup").classList.remove("hidden");
+        showPopup("win-popup", ["giveup-btn", "again-btn"]);
       } else if (foundCount === 2) {
-        document.getElementById("win-popup-2").classList.remove("hidden");
+        showPopup("win-popup-2", ["next-btn"]);
       }
       gameFrozen = true;
       return;
@@ -274,7 +260,6 @@ function movePlayer(dx, dy) {
     }
   }
 }
-
 function startMaze() {
   canvas = document.getElementById("mazeCanvas");
   ctx = canvas.getContext("2d");
@@ -293,7 +278,6 @@ function startMaze() {
   generateMaze();
   drawMaze();
 }
-
 document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowUp") movePlayer(0, -1);
   if (e.key === "ArrowDown") movePlayer(0, 1);
@@ -303,7 +287,6 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
   }
 });
-
 function setupMobileControls() {
   const controls = document.getElementById("mobile-controls");
   controls.classList.remove("hidden");
@@ -317,7 +300,6 @@ function setupMobileControls() {
     });
   });
 }
-
 function launchGame() {
   preloadVideos();
   startMaze();
@@ -325,10 +307,26 @@ function launchGame() {
     setupMobileControls();
   }
 }
-
 let giveUpStates = ["Give Up", "Are you sure?", "No"];
 let giveUpIndex = 0;
-
+function lockButtonTemporarily(btnId, delay = 2000) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = true;
+  btn.style.opacity = "0.6";
+  btn.style.cursor = "not-allowed";
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.style.opacity = "1";
+    btn.style.cursor = "pointer";
+  }, delay);
+}
+function showPopup(popupId, buttonIds = []) {
+  const popup = document.getElementById(popupId);
+  if (!popup) return;
+  popup.classList.remove("hidden");
+  buttonIds.forEach(id => lockButtonTemporarily(id));
+}
 document.addEventListener("DOMContentLoaded", () => {
   const playBtn = document.getElementById("play-btn");
   const introScreen = document.getElementById("intro-screen");
@@ -362,14 +360,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (nextBtn) {
     nextBtn.addEventListener("click", () => {
       document.getElementById("win-popup-2").classList.add("hidden");
-      document.getElementById("assurance-popup").classList.remove("hidden");
+      showPopup("assurance-popup", ["resolution-btn"]);
     });
   }
   const resolutionBtn = document.getElementById("resolution-btn");
   if (resolutionBtn) {
     resolutionBtn.addEventListener("click", () => {
       document.getElementById("assurance-popup").classList.add("hidden");
-      document.getElementById("resolution-popup").classList.remove("hidden");
+      showPopup("resolution-popup", ["end-btn"]);
     });
   }
   const endBtn = document.getElementById("end-btn");
