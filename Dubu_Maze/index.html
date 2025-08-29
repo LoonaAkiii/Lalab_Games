@@ -27,7 +27,7 @@
     <video class="popup-video" autoplay muted loop playsinline>
       <source src="Characters/find1.mp4" type="video/mp4">
     </video>
-    <p class="popup-desc">🎉 Dudu finally found Bubu! But Bubu<br>is still angry and keep on pushing dudu away.<br>Bubu run away again.</p>
+    <p class="popup-desc">Dudu finally found Bubu! But Bubu<br>is still angry and keep on pushing dudu away.<br>Bubu run away again.</p>
     <div class="popup-buttons">
       <button id="giveup-btn">Give Up</button>
       <button id="again-btn">Find Bubu Again</button>
@@ -72,13 +72,19 @@
 </div>
 <canvas id="mazeCanvas"></canvas>
 <div id="mobile-controls" class="hidden">
-  <div class="arrow-row">
-    <button class="arrow-btn" data-dir="up">▲</button>
-  </div>
-  <div class="arrow-row">
-    <button class="arrow-btn" data-dir="left">◄</button>
-    <button class="arrow-btn" data-dir="down">▼</button>
-    <button class="arrow-btn" data-dir="right">►</button>
+  <div class="dpad" aria-label="Directional pad">
+    <button class="arrow-btn up" data-dir="up" aria-label="Move up">
+      <span class="material-icons">keyboard_arrow_up</span>
+    </button>
+    <button class="arrow-btn left" data-dir="left" aria-label="Move left">
+      <span class="material-icons">keyboard_arrow_left</span>
+    </button>
+    <button class="arrow-btn right" data-dir="right" aria-label="Move right">
+      <span class="material-icons">keyboard_arrow_right</span>
+    </button>
+    <button class="arrow-btn down" data-dir="down" aria-label="Move down">
+      <span class="material-icons">keyboard_arrow_down</span>
+    </button>
   </div>
 </div>
 <audio id="bg-music" src="music.mp3" loop playsinline></audio>
