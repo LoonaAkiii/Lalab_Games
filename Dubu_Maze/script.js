@@ -128,14 +128,14 @@ function roundedRectPath(ctx, x, y, w, h, rtl, rtr, rbr, rbl) {
 
 function preloadVideos() {
   duduVideo = document.createElement("video");
-  duduVideo.src = "Characters/dudu.mp4";
+  duduVideo.src = "Characters/Dudu.mp4";
   duduVideo.loop = true;
   duduVideo.muted = true;
   duduVideo.setAttribute("playsinline", "");
   duduVideo.autoplay = false;
 
   bubuVideo = document.createElement("video");
-  bubuVideo.src = "Characters/bubu.mp4";
+  bubuVideo.src = "Characters/Bubu.mp4";
   bubuVideo.loop = true;
   bubuVideo.muted = true;
   bubuVideo.setAttribute("playsinline", "");
