@@ -129,15 +129,19 @@ function preloadVideos() {
   duduVideo.loop = true;
   duduVideo.muted = true;
   duduVideo.playsInline = true;
-  duduVideo.autoplay = true;
-  duduVideo.play();
+  duduVideo.autoplay = false;
   bubuVideo = document.createElement("video");
   bubuVideo.src = "characters/bubu.mp4";
   bubuVideo.loop = true;
   bubuVideo.muted = true;
   bubuVideo.playsInline = true;
-  bubuVideo.autoplay = true;
-  bubuVideo.play();
+  bubuVideo.autoplay = false;
+  ["touchstart", "click"].forEach(evt => {
+    window.addEventListener(evt, () => {
+      duduVideo.play().catch(()=>{});
+      bubuVideo.play().catch(()=>{});
+    }, { once:true });
+  });
 }
 function generateMaze() {
   maze = Array.from({ length: rows }, () => Array(cols).fill(1));
@@ -198,20 +202,24 @@ function drawMaze() {
       }
     }
   }
-  ctx.drawImage(
-    bubuVideo,
-    (goal.x - camX) * cellSize * zoomFactor,
-    (goal.y - camY) * cellSize * zoomFactor,
-    cellSize * zoomFactor,
-    cellSize * zoomFactor
-  );
-  ctx.drawImage(
-    duduVideo,
-    (player.px - camX) * cellSize * zoomFactor,
-    (player.py - camY) * cellSize * zoomFactor,
-    cellSize * zoomFactor,
-    cellSize * zoomFactor
-  );
+  if (bubuVideo.readyState >= 2) {
+    ctx.drawImage(
+      bubuVideo,
+      (goal.x - camX) * cellSize * zoomFactor,
+      (goal.y - camY) * cellSize * zoomFactor,
+      cellSize * zoomFactor,
+      cellSize * zoomFactor
+    );
+  }
+  if (duduVideo.readyState >= 2) {
+    ctx.drawImage(
+      duduVideo,
+      (player.px - camX) * cellSize * zoomFactor,
+      (player.py - camY) * cellSize * zoomFactor,
+      cellSize * zoomFactor,
+      cellSize * zoomFactor
+    );
+  }
   requestAnimationFrame(drawMaze);
 }
 function movePlayer(dx, dy) {
@@ -256,9 +264,13 @@ function startMaze() {
   drawMaze();
 }
 document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowUp") movePlayer(0, -1);
+  if (e.key === "ArrowDown") movePlayer(0, 1);
+  if (e.key === "ArrowLeft") movePlayer(-1, 0);
+  if (e.key === "ArrowRight") movePlayer(1, 0);
+
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
     e.preventDefault();
-    return false;
   }
 });
 function setupMobileControls() {
