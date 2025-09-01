@@ -95,13 +95,16 @@ let canvas, ctx;
 let rows, cols, cellSize;
 let maze = [];
 let player, goal;
-let duduVideo, bubuVideo;
 let zoomFactor = 5;
-const WALL_COLOR = "#a20060";
+const WALL_COLOR = "#058800ff";
 const CORNER_RADIUS_FACTOR = 0.35;
 const MOVE_SPEED = 0.15;
 let gameFrozen = false;
 let foundCount = 0;
+let duduFrames = [], bubuFrames = [];
+let duduIndex = 0, bubuIndex = 0;
+let duduFrameTime = 0, bubuFrameTime = 0;
+const FRAME_INTERVAL = 120;
 function isOpen(x, y) {
   if (y < 0 || y >= rows || x < 0 || x >= cols) return false;
   return maze[y][x] === 0;
@@ -123,29 +126,17 @@ function roundedRectPath(ctx, x, y, w, h, rtl, rtr, rbr, rbl) {
   ctx.lineTo(x, y + rtl);
   ctx.quadraticCurveTo(x, y, x + rtl, y);
 }
-function preloadVideos() {
-  duduVideo = document.createElement("video");
-  duduVideo.src = "Characters/Dudu.mp4";
-  duduVideo.loop = true;
-  duduVideo.muted = true;
-  duduVideo.setAttribute("playsinline", "");
-  duduVideo.autoplay = false;
-  bubuVideo = document.createElement("video");
-  bubuVideo.src = "Characters/Bubu.mp4";
-  bubuVideo.loop = true;
-  bubuVideo.muted = true;
-  bubuVideo.setAttribute("playsinline", "");
-  bubuVideo.autoplay = false;
-  ["touchstart", "click"].forEach(evt => {
-    window.addEventListener(
-      evt,
-      () => {
-        duduVideo.play().catch(() => {});
-        bubuVideo.play().catch(() => {});
-      },
-      { once: true }
-    );
-  });
+function preloadPNGs() {
+  for (let i = 1; i <= 4; i++) {
+    const img = new Image();
+    img.src = `Characters/Dudu00${i}.png`;
+    duduFrames.push(img);
+  }
+  for (let i = 1; i <= 9; i++) {
+    const img = new Image();
+    img.src = `Characters/Bubu00${i}.png`;
+    bubuFrames.push(img);
+  }
 }
 function generateMaze() {
   maze = Array.from({ length: rows }, () => Array(cols).fill(1));
@@ -157,15 +148,8 @@ function generateMaze() {
       [2, 0],
     ].sort(() => Math.random() - 0.5);
     for (let [dx, dy] of dirs) {
-      const nx = x + dx,
-        ny = y + dy;
-      if (
-        nx > 0 &&
-        nx < cols &&
-        ny > 0 &&
-        ny < rows &&
-        maze[ny][nx] === 1
-      ) {
+      const nx = x + dx, ny = y + dy;
+      if (nx > 0 && nx < cols && ny > 0 && ny < rows && maze[ny][nx] === 1) {
         maze[ny][nx] = 0;
         maze[y + dy / 2][x + dx / 2] = 0;
         carve(nx, ny);
@@ -183,36 +167,26 @@ function generateMaze() {
   } while (maze[gy][gx] !== 0 || dist < Math.floor(rows / 2));
   goal = { x: gx, y: gy };
 }
-function drawMaze() {
+function drawMaze(timestamp) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player.px += (player.tx - player.px) * MOVE_SPEED;
   player.py += (player.ty - player.py) * MOVE_SPEED;
   let camX = player.px - canvas.width / (cellSize * zoomFactor * 2);
   let camY = player.py - canvas.height / (cellSize * zoomFactor * 2);
-  camX = Math.max(
-    0,
-    Math.min(cols - canvas.width / (cellSize * zoomFactor), camX)
-  );
-  camY = Math.max(
-    0,
-    Math.min(rows - canvas.height / (cellSize * zoomFactor), camY)
-  );
+  camX = Math.max(0, Math.min(cols - canvas.width / (cellSize * zoomFactor), camX));
+  camY = Math.max(0, Math.min(rows - canvas.height / (cellSize * zoomFactor), camY));
   ctx.fillStyle = WALL_COLOR;
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       if (maze[y][x] !== 1) continue;
-      const px = (x - camX) * cellSize * zoomFactor;
-      const py = (y - camY) * cellSize * zoomFactor;
-      const size = cellSize * zoomFactor;
+      const px = Math.floor((x - camX) * cellSize * zoomFactor);
+      const py = Math.floor((y - camY) * cellSize * zoomFactor);
+      const size = Math.ceil(cellSize * zoomFactor);
       const r = size * CORNER_RADIUS_FACTOR;
-      const openTop = isOpen(x, y - 1);
-      const openRight = isOpen(x + 1, y);
-      const openBottom = isOpen(x, y + 1);
-      const openLeft = isOpen(x - 1, y);
-      const rtl = openTop && openLeft ? r : 0;
-      const rtr = openTop && openRight ? r : 0;
-      const rbr = openBottom && openRight ? r : 0;
-      const rbl = openBottom && openLeft ? r : 0;
+      const rtl = isOpen(x, y - 1) && isOpen(x - 1, y) ? r : 0;
+      const rtr = isOpen(x, y - 1) && isOpen(x + 1, y) ? r : 0;
+      const rbr = isOpen(x, y + 1) && isOpen(x + 1, y) ? r : 0;
+      const rbl = isOpen(x, y + 1) && isOpen(x - 1, y) ? r : 0;
       if (rtl || rtr || rbr || rbl) {
         roundedRectPath(ctx, px, py, size, size, rtl, rtr, rbr, rbl);
         ctx.fill();
@@ -221,19 +195,27 @@ function drawMaze() {
       }
     }
   }
+  if (timestamp - bubuFrameTime > FRAME_INTERVAL) {
+    bubuIndex = (bubuIndex + 1) % bubuFrames.length;
+    bubuFrameTime = timestamp;
+  }
   ctx.drawImage(
-    bubuVideo,
-    (goal.x - camX) * cellSize * zoomFactor,
-    (goal.y - camY) * cellSize * zoomFactor,
-    cellSize * zoomFactor,
-    cellSize * zoomFactor
+    bubuFrames[bubuIndex],
+    Math.floor((goal.x - camX) * cellSize * zoomFactor),
+    Math.floor((goal.y - camY) * cellSize * zoomFactor),
+    Math.ceil(cellSize * zoomFactor),
+    Math.ceil(cellSize * zoomFactor)
   );
+  if (timestamp - duduFrameTime > FRAME_INTERVAL) {
+    duduIndex = (duduIndex + 1) % duduFrames.length;
+    duduFrameTime = timestamp;
+  }
   ctx.drawImage(
-    duduVideo,
-    (player.px - camX) * cellSize * zoomFactor,
-    (player.py - camY) * cellSize * zoomFactor,
-    cellSize * zoomFactor,
-    cellSize * zoomFactor
+    duduFrames[duduIndex],
+    Math.floor((player.px - camX) * cellSize * zoomFactor),
+    Math.floor((player.py - camY) * cellSize * zoomFactor),
+    Math.ceil(cellSize * zoomFactor),
+    Math.ceil(cellSize * zoomFactor)
   );
   requestAnimationFrame(drawMaze);
 }
@@ -263,6 +245,7 @@ function movePlayer(dx, dy) {
 function startMaze() {
   canvas = document.getElementById("mazeCanvas");
   ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
   if (window.innerWidth < 600) {
     rows = cols = 25;
     cellSize = 10;
@@ -301,7 +284,7 @@ function setupMobileControls() {
   });
 }
 function launchGame() {
-  preloadVideos();
+  preloadPNGs();
   startMaze();
   if (window.innerWidth < 600) {
     setupMobileControls();
